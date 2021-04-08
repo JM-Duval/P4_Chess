@@ -4,10 +4,12 @@
 It is a first program with MVC structuring."""
 
 from math import floor
-import tournament as model_tournament
-import round as model_round
-import match as model_match
-import player as model_player
+import sys
+sys.path[:0]=['../']
+from model import tournament as model_tournament
+from model import round as model_round
+from model import match as model_match
+from model import player as model_player
 
 
 # -- data ----------------------------------------
@@ -57,6 +59,7 @@ for i in create_round_1():
 
 
 
+"""
 
 
 
@@ -68,7 +71,6 @@ for i in create_round_1():
 
 
 
-""""
 round1 = []
 for i in range(nb_match):
     match = []
