@@ -5,31 +5,44 @@ It is a first program with MVC structuring."""
 
 class Tournament:
 
-    def __init__(self):
-        pass
+    def __init__(self, round1, round2, round3, round4):
+        self.round1 = round1
+        self.round2 = round2
+        self.round3 = round3
+        self.round4 = round4
 
-    def create_tournament():
-        list_rounds = []
+    def create_tournament(self):
+        tournament = []
+        tournament.append(self.round1)
+        tournament.append(self.round2)
+        tournament.append(self.round3)
+        tournament.append(self.round4)
+        return tournament
+
+    def round_name(self):
+        round_name = []
         for i in range(4):
             name_round = 'Round' + str(i + 1)
-            list_rounds.append(name_round)
-        return list_rounds
+            round_name.append(name_round)
+        return round_name
 
-#a = Tournament
-#b = a.create_tournament()
-#print (b)
 
 
 """
+a = Tournament()
+b = a.create_tournament()
+print (b)
+
 def __init__(self,
-                 name,
+                 name_tournament,
                  location,
                  start_date,
                  end_date,
-                 nbr_of_tours = 4,
+                 nbr_of_rounds = 4,
                  rounds,
                  players,
-                 time
+                 time,
+                 description
                  ):
         self.name = name
         self.location = location
