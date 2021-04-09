@@ -12,6 +12,107 @@ from model import match as model_match
 from model import player as model_player
 
 
+class LaunchNewTournament:
+
+    def __init__(self, name_tournament, time, infos_players):
+        self.name_tournament = name_tournament
+        self.time = time
+        self.infos_players = infos_players
+
+    def create_players(self):
+        players = []
+        for infos_player in self.infos_players:
+            player = model_player.Player(infos_player[0], infos_player[1], infos_player[2])
+            players.append(player)
+            #print (player.first_name)
+        return players
+
+    def sorted_players_round1(self):
+        sorted_players_round1 = self.create_players()
+        sorted_players_round1.sort(key=lambda x: x.elo)
+        return sorted_players_round1
+
+    def sorted_players_rounds(self):
+        sorted_players_rounds = self.create_players()
+        sorted_players_rounds.sort(key=lambda x: x.score, reverse=True)
+        sorted_players_rounds.sort(key=lambda x: x.elo)
+        return sorted_players_rounds
+
+    def nb_match(self):
+        nb_match = floor(len(self.infos_players)/2)
+        return nb_match
+        #print (nb_match)
+
+    def create_matchs(self):
+        matchs = []
+        for i in range (self.nb_match()):
+            call_match = model_match.Match(self.sorted_players_rounds()[i], self.sorted_players_rounds()[i+self.nb_match()])
+            match = call_match.create_match()
+            matchs.append(match)
+            #print (match)
+        return matchs
+
+    def create_round(self):
+        call_round = model_round.Round(self.create_matchs()[0],self.create_matchs()[1],self.create_matchs()[2],self.create_matchs()[3])
+        round = call_round.create_round()
+        print ('Round 1 : ', round)
+
+
+
+
+
+
+
+    def create_tournament(self):
+        tournament = model_tournament.Tournament()
+        rounds = tournament.create_tournament()
+        print (rounds)
+        return rounds
+
+
+    #def create_round_1(self):
+    #    r1 = model_round.Round(rounds[0], self.nb_match())
+    #    round1 = r1.create_round()
+    #    for i in range(self.nb_match()):
+    #        match = model_match.Match(sorted_list_players()[i],
+    #                                  sorted_list_players()[nb_match + i])
+    #        infos_match = match.create_match()
+    #        round1.append(infos_match)
+    #        i += 1
+    #    return round1
+
+
+
+
+
+
+
+
+
+
+
+
+player1 = ['Anna', 8, 8]  #9
+player2 = ['Eric', 22, 3] #4
+player3 = ['Sandra', 18, 4] #6
+player4 = ['Chirac', 18, 5] #5
+player5 = ['Albert', 25, 1] #1
+player6 = ['Marine', 24, 2] #2
+player7 = ['Rachel', 13, 7] #8
+player8 = ['Michel', 16, 6] #7
+player9 = ['Trump', 3, 10] #10
+player10 = ['Brad', 24, 13] #3
+infos_players = [player1,player2,player3,player4,player5,player6,player7,player8]
+
+# -- run ------------------------
+new_tournament = LaunchNewTournament ('tournoi 1', '9h00', infos_players)
+#new_tournament.create_players()
+#new_tournament.sorted_players_round1()
+#new_tournament.nb_match()
+new_tournament.create_matchs()
+new_tournament.create_rounds()
+
+"""
 # -- data ----------------------------------------
 new_tournament = model_tournament.Tournament
 rounds = new_tournament.create_tournament()
@@ -55,130 +156,4 @@ y = 1
 for i in create_round_1():
     print (f'Round-1 Match{y} : {i}')
     y+=1
-
-
-
-
 """
-
-
-
-
-
-
-
-
-
-
-
-round1 = []
-for i in range(nb_match):
-    match = []
-    match.append(sorted_list_players()[i])
-    match.append((sorted_list_players()[nb_match+i]))
-    #print (match)
-    round1.append(match)
-
-print ('Round 1',round1)
-
-
-# -- Create list A & B --
-
-
-def create_list_a():
-    list_player = sorted_list_players()
-    list_player_a = []
-    list_player_b = []
-    y = 0
-    while y < floor(len(sorted_list_players())/2):
-        list_player_a.append(list_player[y])
-        y += 1
-    print ('liste A :',list_player_a)
-
-create_list_a()
-
-def create_list_b():
-    list_player = sorted_list_players()
-    list_player_b = []
-    y = floor(len(sorted_list_players())/2)
-    z = y*2
-    while y < z :
-        list_player_b.append(list_player[y])
-        y += 1
-    print ('liste B :', list_player_b)
-    return list_player_b
-
-create_list_b()
-
-
-
-
-
-def launch_tournament():
-    round = []
-    for i in tournoi:
-        r = modele_rounds.Round(i)
-        r.create_round()
-        round.append(r)
-    return round
-
-launch_tournament()
-
-list_name_players = []
-    for i in infos_players:
-        list_name_players.append(i.name)
-    #print(list_name_players)
-
-def sorted_list_players_round():
-    infos_players.sort(key=lambda x: x.elo)
-    infos_players.sort(key=lambda x: x.score)
-    players = []
-    for player in infos_players:
-        players.append(player.name)
-    return players
-
-
-
-Etape 1 : récupérer la liste des joueurs
-            trier la liste des jouers
-            Créer le tournoi
-            créer les rounds
-            créer les matchs
-            insérer les joueurs dans les matchs"""
-
-
-
-
-
-
-
-
-
-
-"""
-
-list_player = modele_players.player()
-sorted_list_players_round = modele_players.sorted_list_players_round()
-
-
-
-def nombre_match():
-    nb_match = floor(len(list_player) / 2)
-    return nb_match
-
-def create_matchs():
-    list_a = create_list_a()
-    list_b = create_list_b()
-    y = 0
-    for match in range (nombre_match()):
-        player_match = []
-        player_match.append(list_a[y])
-        player_match.append(list_b[y])
-        #print (f'match{y} : ', player_match)
-        print (player_match[0])
-        print (player_match[1])
-        y +=1
-
-"""
-
-
