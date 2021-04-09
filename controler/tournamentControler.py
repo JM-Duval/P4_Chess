@@ -105,12 +105,21 @@ player10 = ['Brad', 24, 13] #3
 infos_players = [player1,player2,player3,player4,player5,player6,player7,player8]
 
 # -- run ------------------------
-new_tournament = LaunchNewTournament ('tournoi 1', '9h00', infos_players)
+#new_tournament = LaunchNewTournament ('tournoi 1', '9h00', infos_players)
 #new_tournament.create_players()
 #new_tournament.sorted_players_round1()
 #new_tournament.nb_match()
-new_tournament.create_matchs()
-new_tournament.create_rounds()
+#new_tournament.create_matchs()
+#new_tournament.create_rounds()
+
+call_tournament = model_tournament.Tournament(infos_players)
+round = call_tournament.create_round_1()
+call_round = model_round.Round(round)
+matchs = call_round.create_match()
+
+print('Round 1 : ', round)
+
+
 
 """
 # -- data ----------------------------------------
