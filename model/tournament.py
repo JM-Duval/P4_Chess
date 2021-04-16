@@ -7,20 +7,23 @@ from math import floor
 
 class Tournament:
 
-    def __init__(self, name_tournament, time_control):
+    def __init__(self, name_tournament, location, start_time, tour_number, time_control):
         self.name_tournament = name_tournament
+        self.location = location
+        self.start_time = start_time
+        self.tour_number = tour_number
         self.time_control = time_control
         self.players = []
         self.rounds = []
 
-        #self.name_tournament = name_tournament
-        #self.location = location
-        #self.start_date = start_date
+            #self.name_tournament = name_tournament
+            #self.location = location
+            #self.start_date = start_date
         #self.end_date = end_date
-        #self.nb_rounds = nb_rounds
-        #self.round = round   # rounds = liste des instances
-        #self.players = players   # liste des players
-        #self.time = time   # bullet
+            #self.nb_rounds = nb_rounds
+            #self.round = round   # rounds = liste des instances
+            #self.players = players   # liste des players
+            #self.time = time   # bullet
         #self.description = None
 
     def add_player (self, player):
@@ -29,14 +32,3 @@ class Tournament:
     def add_round (self, round):
         self.rounds.append(round)
 
-
-
-
-
-
-
-
-    def create_round(self):
-        for i in range(self.nb_rounds):
-            self.rounds.append([])
-        return self.rounds

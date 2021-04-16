@@ -5,11 +5,17 @@ It is a first program with MVC structuring."""
 
 class Player:
 
-    def __init__(self,first_name, score, elo, last_name='nc'):
+    def __init__(self,first_name, last_name, date_birth, sexe, elo):
         self.first_name = first_name
         self.last_name = last_name
-        self.score = score
+        self.date_birth = date_birth
+        self.sexe = sexe
         self.elo = elo
+        self.id = self.create_id()
+        self.opponents = []
+
+    def create_id(self):
+        return str('@') + str(self.first_name)[:3] + str(self.elo)
 
     def get_name(self):
         return self.first_name
