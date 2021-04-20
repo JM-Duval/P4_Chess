@@ -11,22 +11,26 @@ class Player:
         self.date_birth = date_birth
         self.sexe = sexe
         self.elo = elo
+        self.score = 0
         self.id = self.create_id()
         self.opponents = []
 
     def create_id(self):
-        return str('@') + str(self.first_name)[:3] + str(self.elo)
+        return str('@') + str(self.first_name)[:3].lower() + str(self.elo)
 
     def get_name(self):
         return self.first_name
 
-    def set_score(self, add_score):
-        self.score += add_score
-
     def get_score(self):
         return self.score
+
+    def add_score(self, add_score):
+        self.score += add_score
 
     def __str__(self):
         out = f"first name: {self.first_name} | last name: {self.last_name}," \
               f" | score: {self.score} | elo: {self.elo}"
         return out
+
+    def add_opponent(self, opponent_id):
+        self.opponents.append(opponent_id)
