@@ -15,5 +15,5 @@ def display_score(players):
 
 # -- Vainqueur --
 def display_winner(tournament_name, player):
-    print (f' Le vainqueur du tournoi "tournament_name}" est : \n'
+    print (f' Le vainqueur du tournoi "{tournament_name}" est : \n'
            f'****************  {player}  ****************')

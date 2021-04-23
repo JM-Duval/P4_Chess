@@ -4,6 +4,7 @@
 It is a first program with MVC structuring."""
 
 from math import floor
+import datetime
 import sys
 sys.path[:0]=['../']
 from model.tournament import Tournament
@@ -31,12 +32,28 @@ players = [player1,player2,player3,player4,player5,player6,player7,player8]
 class TournamentControler:
 
     def __init__(self):
-        self.tournament_name, location, start_time, tour_number, time_control = data_tournament()
-        self.tournament = Tournament(self.tournament_name, location, start_time, tour_number, time_control)
+        self.start_time = self.start_tournament()
+        self.tournament_name, location, tour_number, time_control \
+            = data_tournament()
+        self.tournament = Tournament(self.tournament_name, location,
+                                     self.start_time, tour_number, time_control)
         self.tournament.players = players
         self.nb_match = floor((len(self.tournament.players)/2))
 
+    def start_tournament(self):
+        start_time = datetime.datetime.today().strftime('%d-%m-%y at %H:%M')
+        display_start_time(start_time)
+        return start_time
+
+    def close_tournament(self):
+        end_time = datetime.datetime.today().strftime('%d-%m-%y at %H:%M')
+        display_winner(self.tournament_name,
+                       self.tournament.players[0].first_name)
+        display_end_time(end_time)
+        return end_time
+
     def run_first_round(self, round_name):
+        #display_start_time(self.start_time)
         display_round(round_name)
         self.tournament.players.sort(key=lambda x: x.elo)
         round1 = Round(str(1))
@@ -54,7 +71,8 @@ class TournamentControler:
         for i in range (self.nb_match): # for each match in round1, add score player
             self.handle_score(round1.matchs[i].player1,
                               round1.matchs[i].player2)
-        #round1.matchs[0].score_player1, round1.matchs[0].score_player2 = self.handle_score(player1, player2)
+        #round1.matchs[0].score_player1, round1.matchs[0].score_player2 =
+        # self.handle_score(player1, player2)
 
     def run_next_round(self, round_name):
         display_round(round_name)
@@ -79,7 +97,6 @@ class TournamentControler:
             self.handle_score(roundx.matchs[i].player1,
                               roundx.matchs[i].player2)
         display_score(self.tournament.players)
-        display_winner(self.tournament_name, self.tournament.players[0].first_name)
 
     def checked_opponents(self):
         players_sorted = []
@@ -100,7 +117,8 @@ class TournamentControler:
                         opponent_list_checked.append(players_sorted[i])
                         players_sorted.pop(x), players_sorted.pop(i - 1)
                         opponent_in_list = False
-                except:  # cas ou un joueur à déja jouer vs tout le monde. il rejoue vs le joueur n+1
+                except:  # situation ou un joueur à déja joué vs tout le monde.
+                    # il rejoue vs le joueur n+1
                     opponent_list_checked.append(players_sorted[x])
                     opponent_list_checked.append(players_sorted[x+1])
                     players_sorted.pop(x), players_sorted.pop(x)
@@ -111,3 +129,5 @@ class TournamentControler:
         result_score = enter_score(player1, player2)
         player1.score += result_score[0]
         player2.score += result_score[1]
+
+

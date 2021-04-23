@@ -4,6 +4,13 @@
 It is a first program with MVC structuring."""
 
 
+# -- Date début & fin du tournoi --
+def display_start_time(start_time):
+    print (f'Lancement du tournoi: {start_time}')
+
+def display_end_time(end_time):
+    print (f'Fin du tournoi: {end_time}')
+
 # -- Feuille de match --
 def display_game_sheet (round_name, matchs):
     match_number=1

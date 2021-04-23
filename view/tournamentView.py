@@ -12,13 +12,12 @@ from controler.dataUserControler import CheckData
 def data_tournament():
     tournament_name = enter_word('tournament_name')
     location = enter_word('location')
-    start_time = datetime.datetime.today().strftime('%d-%m-%y at %H:%M')
     tour_number = 4
     time_control = '1' #input('Bullet / Blitz / Coup rapide :')
     rounds = []
     players = []
     note = ()
-    return tournament_name, location, start_time, tour_number, time_control
+    return tournament_name, location, tour_number, time_control
 
 def enter_time_control(controler):
     controler_input = input(f"{controler} : ")
@@ -27,7 +26,6 @@ def enter_time_control(controler):
         controler_input = input(f"{controler} : ")
         check = CheckData(controler_input)
     return controler_input
-
 
 # ----------------------- Data player ------------------------------
 def data_player():
@@ -113,51 +111,3 @@ def enter_score(player1, player2):
         print(f'{player1.first_name}\t: +0.5 pts\n'
               f'{player2.first_name}\t: +0.5 pts')
         return 0.5,0.5
-
-"""
-
-def display_error_number():
-    print("Veuillez saisir un chiffre donné dans l'énoncé")
-
-def display_winner(player):
-    print(f'{player.first_name}: + 1 pt soit {player.score} pts')
-
-def display_equally(player1, player2):
-    print (f'{player1.first_name}\t: +0.5 pts soit {player1.score} pts\n'
-           f'{player2.first_name}\t: +0.5 pts soit {player2.score} pts')
-
-def enter_score(player1, player2):
-    winner = input(f'\nQui a gagne? \n'
-                   f'| {player1.first_name} | : tapez 1 \n'
-                   f'| {player2.first_name} | : tapez 2 \n'
-                   f'match nul : tapez 3 \n')
-    while winner not in [str(1), str(2), str(3)]:
-        print("Veuillez saisir un chiffre donné dans l'énoncé")
-        winner = input(f'\nQui a gagne? \n'
-                       f'| {player1.first_name} | : tapez 1 \n'
-                       f'| {player2.first_name} | : tapez 2 \n'
-                       f'match nul : tapez 3 \n')
-    return winner
-    
-
-def display_help_correct_word():
-    print(" Saisir un mot ou groupe de mots suivant les conditions ci dessous : \n"
-                      " - Minimum 2 lettres \n"
-                      " - Caractères autorisés: abcdefghijklmnopqrstuvwxyz_ \n"
-                      " - Tout en minuscule"
-                      " - '_' remplace les espaces")
-
-def display_help_correct_number():
-    print(" Saisir un nombre suivant les conditions ci dessous : \n"
-          " - Pas d'espace \n"
-          " - Caractères autorisés: 1234567890")
-
-def display_help_correct_date_birt(year_birt_min, year_birt_max):
-    print(f'Saisir une date de naissance suivant les conditions ci dessous : \n'
-          f' - Année comprise entre : {year_birt_min} & {year_birt_max} \n'
-          f' - Format : DD-MM-YYYY')
-
-def display_help_correct_sexe():
-    print("Saisir 'man' or 'women'")    
-    
-"""
