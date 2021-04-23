@@ -28,8 +28,9 @@ class Player:
         self.score += add_score
 
     def __str__(self):
-        out = f"first name: {self.first_name} | last name: {self.last_name}," \
-              f" | score: {self.score} | elo: {self.elo}"
+        out = f"first name: {self.first_name} | last name: {self.last_name}, \n" \
+              f"date of birth: {self.date_birth} | sexe: {self.sexe} \n " \
+              f"score: {self.score} | elo: {self.elo}"
         return out
 
     def add_opponent(self, opponent_id):

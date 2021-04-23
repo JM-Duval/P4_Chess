@@ -11,7 +11,7 @@ from model.round import Round
 from model.match import Match
 from model.player import Player
 from view.tournamentView import *
-from view.rankingView import print_score
+from view.rankingView import display_score, display_winner
 from view.gamesheetView import *
 
 
@@ -31,13 +31,13 @@ players = [player1,player2,player3,player4,player5,player6,player7,player8]
 class TournamentControler:
 
     def __init__(self):
-        tournament_name, location, start_time, tour_number, time_control = data_tournament()
-        self.tournament = Tournament(tournament_name, location, start_time, tour_number, time_control)
+        self.tournament_name, location, start_time, tour_number, time_control = data_tournament()
+        self.tournament = Tournament(self.tournament_name, location, start_time, tour_number, time_control)
         self.tournament.players = players
         self.nb_match = floor((len(self.tournament.players)/2))
 
-    def run_first_round(self):
-        print(f'\n------  Round 1  -------\n')
+    def run_first_round(self, round_name):
+        display_round(round_name)
         self.tournament.players.sort(key=lambda x: x.elo)
         round1 = Round(str(1))
         self.tournament.add_round(round1)
@@ -49,18 +49,15 @@ class TournamentControler:
             match.player1.add_opponent(match.player2.id)
             match.player2.add_opponent(match.player1.id)
 
-        print_game_sheet('Round 1', round1.matchs)
+        display_game_sheet('Round 1', round1.matchs)
 
         for i in range (self.nb_match): # for each match in round1, add score player
             self.handle_score(round1.matchs[i].player1,
                               round1.matchs[i].player2)
         #round1.matchs[0].score_player1, round1.matchs[0].score_player2 = self.handle_score(player1, player2)
 
-        print_score(self.tournament.players)
-
-
     def run_next_round(self, round_name):
-        print (f'\n------  {round_name}  -------\n')
+        display_round(round_name)
         self.tournament.players.sort(key=lambda x: x.elo)
         self.tournament.players.sort(key=lambda x: x.score, reverse=True)
         roundx = Round(round_name)
@@ -75,14 +72,14 @@ class TournamentControler:
             match.player1.add_opponent(match.player2.id)
             match.player2.add_opponent(match.player1.id)
 
-        print_score(self.tournament.players)
-        print_game_sheet(round_name, roundx.matchs)
+        display_score(self.tournament.players)
+        display_game_sheet(round_name, roundx.matchs)
 
         for i in range (self.nb_match):
             self.handle_score(roundx.matchs[i].player1,
                               roundx.matchs[i].player2)
-
-        print_score(self.tournament.players)
+        display_score(self.tournament.players)
+        display_winner(self.tournament_name, self.tournament.players[0].first_name)
 
     def checked_opponents(self):
         players_sorted = []
@@ -110,20 +107,7 @@ class TournamentControler:
                     break
         return opponent_list_checked
 
-
     def handle_score(self, player1, player2):
         result_score = enter_score(player1, player2)
-        if result_score == str(1):
-            player1.score +=1
-            print (f'{player1.first_name}: + 1 pt soit {player1.score}')
-            #return 1,0
-        elif result_score == str(2):
-            player2.score += 1
-            print(f'{player2.first_name}: +1 pt soit {player1.score}')
-            #return 0,1
-        elif result_score == str(3):
-            player1.score += 0.5
-            player2.score += 0.5
-            print(f'Match Nul \n'
-                  f'{player1.first_name}: +0.5 pts soit {player1.score}\n'
-                  f'{player2.first_name}: +0.5 pts soit {player2.score}')
+        player1.score += result_score[0]
+        player2.score += result_score[1]

@@ -5,9 +5,15 @@ It is a first program with MVC structuring."""
 
 
 # -- Classement --
-def print_score(players):
+def display_score(players):
     players.sort(key=lambda x: x.elo)
     players.sort(key=lambda x: x.score, reverse=True)
-    print (f' --  Score player  -- \n')
+    print (f'------  Score Player  ------')
     for player in players:
-        print (f'| {player.first_name} ({player.id}) : {player.score} |')
+        print (f'| {player.first_name}  \t{player.id}\t{player.score}  |')
+
+
+# -- Vainqueur --
+def display_winner(tournament_name, player):
+    print (f' Le vainqueur du tournoi "tournament_name}" est : \n'
+           f'****************  {player}  ****************')

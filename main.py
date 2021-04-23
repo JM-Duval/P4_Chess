@@ -3,13 +3,30 @@
 """This file is a exercice about a program for help the chess tournament organization.
 It is a first program with MVC structuring."""
 
+import datetime
 import sys
 sys.path[:0]=['../']
 from controler.tournamentControler import TournamentControler
+from controler.dataUserControler import *
+from view.tournamentView import *
+
 
 if __name__ == "__main__":
+    #test1 = CheckData('1986')
+    #print (test1.date())
+    #test2 = CheckData('31/3-1986')
+    #print(test2.date())
+    #test = data_player()
+
+
     run = TournamentControler()
-    test = run.run_first_round()
+    test = run.run_first_round('Round 1')
     for i in range (3):
         round_name = 'Round ' + str(2 + i)
         test = run.run_next_round(round_name)
+
+
+
+# enter_infos_tournament
+# enter_infos_players
+# Launch tournament
