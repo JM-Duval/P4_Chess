@@ -50,13 +50,14 @@ class TournamentControler:
         display_winner(self.tournament_name,
                        self.tournament.players[0].first_name)
         display_end_time(end_time)
+        for player in self.tournament.players:
+            player.clean_opponents()
         return end_time
 
     def run_first_round(self, round_name):
-        #display_start_time(self.start_time)
         display_round(round_name)
         self.tournament.players.sort(key=lambda x: x.elo)
-        round1 = Round(str(1))
+        round1 = Round('Round 1')
         self.tournament.add_round(round1)
         for i in range (self.nb_match):
             round1.add_match(self.tournament.players[i],
@@ -79,7 +80,7 @@ class TournamentControler:
         self.tournament.players.sort(key=lambda x: x.elo)
         self.tournament.players.sort(key=lambda x: x.score, reverse=True)
         roundx = Round(round_name)
-
+        self.tournament.add_round(roundx)
         x = 0
         for i in range(floor(len(self.checked_opponents())/2)):
             roundx.add_match(self.checked_opponents()[i+x],
@@ -130,4 +131,26 @@ class TournamentControler:
         player1.score += result_score[0]
         player2.score += result_score[1]
 
+    def get_infos_tournament(self):
+        return self.tournament
 
+
+
+
+
+
+"""
+        return self.tournament.rounds[0].matchs[0].player1.first_name,\
+               self.tournament.rounds[0].matchs[0].player2.first_name, \
+               self.tournament.name_tournament
+
+        print (self.tournament.rounds[0].matchs[0].player1.first_name)
+        print (self.tournament.rounds[0].matchs[0].player2.first_name)
+        print (self.tournament.rounds[0].matchs[0].player1.score)
+        print (self.tournament.rounds[0].matchs[0].player2.score)
+
+        print(self.tournament.rounds[0].matchs[1].player1.first_name)
+        print(self.tournament.rounds[0].matchs[1].player2.first_name)
+        print (self.tournament.rounds[0].matchs[1].player1.score)
+        print (self.tournament.rounds[0].matchs[1].player2.score)
+"""

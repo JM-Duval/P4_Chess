@@ -16,9 +16,12 @@ class Tournament:
         self.rounds = []
         self.description = None
 
+    def __str__(self):
+        out = f"Tournament: {self.name_tournament}, {self.location}, {self.rounds[0].matchs[0]}, {self.rounds[0]}"
+        return out
 
-    def add_player (self, player):
+    def add_player(self, player):
         self.players.append(player)
 
-    def add_round (self, round):
+    def add_round(self, round):
         self.rounds.append(round)

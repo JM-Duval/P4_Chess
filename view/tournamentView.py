@@ -10,8 +10,8 @@ from controler.dataUserControler import CheckData
 
 # ---------------------- Data tournament ---------------------------
 def data_tournament():
-    tournament_name = enter_word('tournament_name')
-    location = enter_word('location')
+    tournament_name = 'Word_tour_Tournament' #enter_word('tournament_name')
+    location = 'Sydney' #enter_word('location')
     tour_number = 4
     time_control = '1' #input('Bullet / Blitz / Coup rapide :')
     rounds = []
@@ -87,6 +87,8 @@ def enter_sexe():
 
 # -------------------- Enter Score ---------------------
 def enter_score(player1, player2):
+    winner = str(2)
+    """
     winner = input(f'\nQui a gagne? \n'
                    f'| {player1.first_name}  \t| : tapez 1 \n'
                    f'| {player2.first_name}  \t| : tapez 2 \n'
@@ -98,7 +100,7 @@ def enter_score(player1, player2):
                        f'| {player1.first_name}  \t| : tapez 1 \n'
                        f'| {player2.first_name}  \t| : tapez 2 \n'
                        f'| match nul \t| : tapez 3 \n')
-
+    """
     if winner == str(1):
         print(f'{player1.first_name}: + 1 pt')
         return 1, 0
