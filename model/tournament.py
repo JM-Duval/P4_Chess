@@ -3,11 +3,10 @@
 """This file is a exercice about a program for help the chess tournament organization.
 It is a first program with MVC structuring."""
 
-
 class Tournament:
 
-    def __init__(self, name_tournament, location, start_time, tour_number, time_control):
-        self.name_tournament = name_tournament
+    def __init__(self, tournament_name, location, start_time, tour_number, time_control):
+        self.tournament_name = tournament_name
         self.location = location
         self.start_time = start_time
         self.tour_number = tour_number
@@ -17,7 +16,7 @@ class Tournament:
         self.description = None
 
     def __str__(self):
-        out = f"Tournament: {self.name_tournament}, {self.location}, {self.rounds[0].matchs[0]}, {self.rounds[0]}"
+        out = f"Tournament: {self.tournament_name}, {self.location}, {self.rounds[0].matchs[0]}, {self.rounds[0]}"
         return out
 
     def add_player(self, player):
