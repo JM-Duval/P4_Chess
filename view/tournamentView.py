@@ -10,7 +10,7 @@ from controler.checkerInputControler import CheckerData
 
 # ---------------------- Data tournament ---------------------------
 def data_input_tournament():
-    tournament_name = 'Word_tour_Tournament_2' #enter_word('tournament_name')
+    tournament_name = 'Word_tour_Tournament_5' #enter_word('tournament_name')
     location = 'Sydney' #enter_word('location')
     tour_number = 4
     time_control = '1' #input('Bullet / Blitz / Coup rapide :')

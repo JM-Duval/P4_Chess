@@ -11,7 +11,7 @@ from model.tournament import Tournament
 from model.round import Round
 from model.match import Match
 from model.player import Player
-from model.dataBaseTournamentModel import *
+from model.dataBaseTournamentModel import DataTournament, DataTournamentPlayers
 from view.tournamentView import *
 from view.gamesheetView import *
 from view.rankingView import display_score, display_winner
@@ -33,6 +33,7 @@ players = [player1,player2,player3,player4,player5,player6,player7,player8]
 class TournamentControler:
 
     def __init__(self):
+
         tournament_name, location, tour_number, time_control = data_input_tournament()
         self.tournament_name = tournament_name
         self.start_time = datetime.datetime.today().strftime('%d-%m-%y at %H:%M')
@@ -41,10 +42,11 @@ class TournamentControler:
                                      self.start_time,
                                      tour_number,
                                      time_control)
-        self.tournament.players = players
+        #self.tournament.players = players
         self.nb_match = floor((len(self.tournament.players)/2))
 
     def start_tournament(self):
+        self.tournament.status = 'open'
         self.save_data_tournament()
         display_start_time(self.start_time)
         return self.start_time
@@ -55,12 +57,11 @@ class TournamentControler:
         display_end_time(end_time)
         for player in self.tournament.players:
             player.clean_opponents()
+        self.tournament.status = 'close'
         return end_time
 
     def save_data_tournament(self):
-        DataTournament(self.tournament_name,
-                       self.tournament.location,
-                       self.start_time, 4, 3).record()
+        DataTournament(self.tournament_name).insert(self.tournament)
 
     def save_data_round(self, round_name, player):
         DataTournamentPlayers(self.tournament_name, round_name).insert_player(player)
@@ -160,20 +161,3 @@ class TournamentControler:
 
 
 
-
-
-"""
-        return self.tournament.rounds[0].matchs[0].player1.first_name,\
-               self.tournament.rounds[0].matchs[0].player2.first_name, \
-               self.tournament.name_tournament
-
-        print (self.tournament.rounds[0].matchs[0].player1.first_name)
-        print (self.tournament.rounds[0].matchs[0].player2.first_name)
-        print (self.tournament.rounds[0].matchs[0].player1.score)
-        print (self.tournament.rounds[0].matchs[0].player2.score)
-
-        print(self.tournament.rounds[0].matchs[1].player1.first_name)
-        print(self.tournament.rounds[0].matchs[1].player2.first_name)
-        print (self.tournament.rounds[0].matchs[1].player1.score)
-        print (self.tournament.rounds[0].matchs[1].player2.score)
-"""

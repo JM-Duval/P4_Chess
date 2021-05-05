@@ -7,12 +7,19 @@ from tinydb import TinyDB, Query, where
 # TinyDB is the database
 # Query allows to query the data base
 # where allows to refine the search
+import sys
+sys.path[:0]=['../']
+from pathlib import Path
+from model.player import Player
+
 
 class DataBasePlayers:
     def __init__(self):
         self.name_table = 'players'
         self.name_file = 'players_chess.json'
-        db = TinyDB(self.name_file)
+        origin_path = (sys.path[(len(sys.path)) - 2][:-4])
+        path_data_players = os.path.join(origin_path, 'data/list_players')
+        db = TinyDB(path_data_players/self.name_file)
         self.players_table = db.table(self.name_table)
 
     def search(self, player):
@@ -87,3 +94,9 @@ class DataBasePlayers:
         for i in self.load():
             for arg in args:
                 print (i.__dict__[arg])
+
+    def sorted_alpha(self):
+        return sorted(self.load(), key=lambda x: x.last_name)
+
+    def sorted_elo(self):
+        return sorted(self.load(), key=lambda x: x.elo)
