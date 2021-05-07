@@ -87,7 +87,7 @@ def enter_sexe():
 
 # -------------------- Enter Score ---------------------
 def enter_score(player1, player2):
-    winner = str(2)
+    winner = str(1)
     """
     winner = input(f'\nQui a gagne? \n'
                    f'| {player1.first_name}  \t| : tapez 1 \n'

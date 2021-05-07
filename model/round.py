@@ -28,7 +28,7 @@ class Round:
         return end_time
 
     def __str__(self):
-        out = f"Match: {self.round_name}, {self.matchs}"
+        out = f"{self.matchs}"
         return out
 
     def add_match(self, player1, player2):

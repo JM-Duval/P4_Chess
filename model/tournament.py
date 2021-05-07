@@ -5,10 +5,11 @@ It is a first program with MVC structuring."""
 
 class Tournament:
 
-    def __init__(self, tournament_name, location, start_time, tour_number, time_control, status=None):
+    def __init__(self, tournament_name, location, start_time, tour_number, time_control, status=None, end_time=None):
         self.tournament_name = tournament_name
         self.location = location
         self.start_time = start_time
+        self.end_time = end_time
         self.tour_number = tour_number
         self.time_control = time_control
         self.players = []
