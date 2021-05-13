@@ -25,21 +25,33 @@ player_Rins = Player('Alex', 'Rins', '25', 'Man', 9)
 player_Martin = Player('Jorge', 'Martin', '23', 'Man', 13)
 player_Mir = Player('Joan', 'Mir', '23', 'Man', 4)
 player_Rossi = Player('Valentino', 'Rossi', '42', 'Man', 21)
-player_Miller = Player('Jack', 'Mille', '26', 'Man', 6)
+player_Miller = Player('Jack', 'Miller', '26', 'Man', 6)
 player_Marquez = Player('Marc', 'Marquez', '28', 'Man', 15)
 player_Zarco = Player('Johan', 'Zarco', '30', 'Man', 5)
 player_Morbidelli = Player('Franco', 'Morbidelli', '26', 'Man', 8)
-players = [player_Rins, player_Martin, player_Mir, player_Rossi, player_Miller, player_Marquez, player_Zarco, player_Morbidelli]
+#players = [player_Rins, player_Martin, player_Mir, player_Rossi, player_Miller, player_Marquez, player_Zarco, player_Morbidelli]
 
 
 
 
 if __name__ == "__main__":
 
+    """
+
     run = TournamentControler(players)
     run.start_tournament()
     run.run_first_round('Round 1')
+
     for i in range (3):
         round_name = 'Round ' + str(2 + i)
         run.run_next_round(round_name)
     run.close_tournament()
+    """
+
+    
+    
+    data_test = DataTournament('Word_tour_Tournament_5')
+    run3 = data_test.load_tournament()
+    players = run3.players
+    run2 = TournamentControler(players)
+    run2.restart_tournament(run3)

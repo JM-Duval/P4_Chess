@@ -11,7 +11,7 @@ from model.tournament import Tournament
 from model.round import Round
 from model.match import Match
 from model.player import Player
-from model.dataBaseTournamentModel import DataTournament, DataTournamentPlayers
+from model.dataBaseTournamentModel import DataTournament #, DataTournamentPlayers
 from view.tournamentView import *
 from view.gamesheetView import *
 from view.rankingView import display_score, display_winner
@@ -20,6 +20,7 @@ from view.rankingView import display_score, display_winner
 class TournamentControler:
 
     def __init__(self, players):
+
         tournament_name, location, tour_number, time_control = data_input_tournament()
         self.tournament_name = tournament_name
         self.start_time = datetime.datetime.today().strftime('%d-%m-%y at %H:%M')
@@ -31,19 +32,41 @@ class TournamentControler:
         self.tournament.players = players
         self.nb_match = floor((len(self.tournament.players)/2))
 
+
     def start_tournament(self):
         self.tournament.status = 'open'
-        DataTournament(self.tournament_name).insert_infos_tour(self.tournament)
         display_start_time(self.start_time)
+
+
+    def stop_tournament(self):
+        DataTournament(self.tournament_name).save_tournament(self.tournament)
+
+
+    def restart_tournament(self, tournament):
+        self.tournament_name = tournament.tournament_name
+        self.location = tournament.location
+        self.start_time = tournament.start_time
+        self.end_time = tournament.end_time
+        self.tour_number = tournament.tour_number
+        self.time_control = tournament.time_control
+        self.players = tournament.players
+        self.rounds = tournament.rounds
+        self.description = tournament.description
+        self.status = tournament.status
+        return self.tournament_name, self.location, self.start_time, \
+               self.end_time, self.tour_number, self.time_control, \
+               self.players, self.rounds, self.description, self.status
+
 
     def close_tournament(self):
         display_winner(self.tournament_name, self.tournament.players[0].first_name)
         end_time = datetime.datetime.today().strftime('%d-%m-%y at %H:%M')
         display_end_time(end_time)
-        for player in self.tournament.players:
-            player.clean_opponents()
+        #for player in self.tournament.players:
+        #    player.clean_opponents()
         DataTournament(self.tournament_name).update("status", "closed")
         DataTournament(self.tournament_name).update("end_time", end_time)
+        self.test_save_tour()
 
     def save_data_round(self, round):
         DataTournament(self.tournament_name).insert_round(round)
@@ -51,12 +74,25 @@ class TournamentControler:
     def update_tour_number(self):
         DataTournament(self.tournament_name).update("tour_number", self.tournament.tour_number - 1)
 
+    def update_data_players(self):
+        #print(self.tournament.players[0].score)
+        #update_data_players(self, player, arg, new_value)
+        DataTournament(self.tournament_name).update_data_players() #'score',3)
+        #print(tournament.players[0].score)
+        #DataTournament(self.tournament_name).update("tour_number", self.tournament.tour_number - 1)
+
+    def test_save_tour(self):
+        DataTournament(self.tournament_name).save_tournament(self.tournament)
+
+    def test_insert_tour(self, round):
+        DataTournament(self.tournament_name).add_round(round)
+
     # --  Round 1 -----------------------------------------------------
     def run_first_round(self, round_name):
         display_round(round_name)
         self.tournament.players.sort(key=lambda x: x.elo)
         round1 = Round('Round 1')
-        #self.tournament.add_round(round1)
+        self.tournament.add_round(round1)
         for i in range (self.nb_match):
             round1.add_match(self.tournament.players[i],
                              self.tournament.players[i+self.nb_match])
@@ -72,11 +108,14 @@ class TournamentControler:
                                round1.matchs[i].player2)
 
         display_score(self.tournament.players)
-        self.save_data_round(round1)
-        self.update_tour_number()
+
+        #self.test_save_tour()
+        #self.save_data_round(round1)
+        #self.update_tour_number()
 
         #round1.matchs[0].score_player1, round1.matchs[0].score_player2 =
         # self.handle_score(player1, player2)
+
 
     # --  Next Rounds  ---------------------------------
     def run_next_round(self, round_name):
@@ -85,7 +124,7 @@ class TournamentControler:
         self.tournament.players.sort(key=lambda x: x.elo)
         self.tournament.players.sort(key=lambda x: x.score, reverse=True)
         roundx = Round(round_name)
-        #self.tournament.add_round(roundx)
+        self.tournament.add_round(roundx)
         x = 0
         for i in range(floor(len(self.checked_opponents())/2)):
             roundx.add_match(self.checked_opponents()[i+x],
@@ -104,8 +143,10 @@ class TournamentControler:
                                roundx.matchs[i].player2)
 
         display_score(self.tournament.players)
-        self.save_data_round(roundx)
-        self.update_tour_number()
+        #self.save_data_round(roundx)
+        #self.update_tour_number()
+
+        #self.test_insert_tour(roundx)
 
 
     def checked_opponents(self):

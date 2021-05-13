@@ -7,10 +7,10 @@ from tinydb import TinyDB, Query, where
 import sys
 sys.path[:0]=['../']
 import os
-from model.player import Player
-from model.match import Match
-from model.round import Round
 from model.tournament import Tournament
+from model.round import Round
+from model.match import Match
+from model.player import Player
 
 # TinyDB is the database
 # Query allows to query the data base
@@ -24,35 +24,36 @@ class DataTournament:
         self.name_file = 'tournaments.json'
         origin_path = (sys.path[(len(sys.path)) -2][:-4])
         path_data_tournament = os.path.join(origin_path, 'data/tournaments')
-        #path_data_tournament = Path("data/tournaments")
         db = TinyDB(os.path.join(path_data_tournament,self.name_file))
         self.tournament_table = db.table(self.name_table)
 
 
-    def _serialized_infos_tour(self, infos_tour):
-        serialized_infos_tour = {
-        'tournament_name': infos_tour.tournament_name,
-        'start_time': infos_tour.start_time,
-        'tour_number': infos_tour.tour_number,
-        'location': infos_tour.location,
-        'time_control': infos_tour.time_control,
-        'status': infos_tour.status,
-        'end_time' : infos_tour.end_time,
-        'players' : (self._serialized_player(infos_tour.players[0]),
-                     self._serialized_player(infos_tour.players[1]),
-                     self._serialized_player(infos_tour.players[2]),
-                     self._serialized_player(infos_tour.players[3]),
-                     self._serialized_player(infos_tour.players[4]),
-                     self._serialized_player(infos_tour.players[5]),
-                     self._serialized_player(infos_tour.players[6]),
-                     self._serialized_player(infos_tour.players[7])
-                         )
+    def serialized_tournament(self, tournament):
+        serialized_tournament = {
+        'tournament_name': tournament.tournament_name,
+        'start_time': tournament.start_time,
+        'tour_number': tournament.tour_number,
+        'location': tournament.location,
+        'time_control': tournament.time_control,
+        'status': tournament.status,
+        'end_time' : tournament.end_time,
+        'players' : [self._serialized_player(player) for player in tournament.players],
+        'rounds' : [self._serialized_round(round) for round in tournament.rounds] #self._serialized_rounds(tournament.rounds)
         }
-        return serialized_infos_tour
+        return serialized_tournament
 
-    def update(self, arg, new_value):
-        Tour = Query()
-        self.tournament_table.update({arg: new_value}, Tour.tournament_name == self.tournament_name)
+    def _serialized_round(self, round):
+        serialized_round = {
+                'Round' : [self._serialized_match(match) for match in round.matchs]
+                           }
+        return serialized_round
+
+    def _serialized_match(self, match):
+        serialized_match = {
+            'match' : (self._serialized_player(match.player1),
+                       self._serialized_player(match.player2))
+        }
+        return serialized_match
 
     def _serialized_player(self, player):
         serialized_player = {
@@ -68,83 +69,174 @@ class DataTournament:
         return serialized_player
 
 
-    def serialized_round(self, round):
-        serialized_round = {
-                'Round' : (self.serialized_match(round.matchs[0]),
-                           self.serialized_match(round.matchs[1]),
-                           self.serialized_match(round.matchs[2]),
-                           self.serialized_match(round.matchs[3])
-                           )
-                           }
-        return serialized_round
-
-    def serialized_match(self, match):
-        serialized_match = {
-            'match' : (self._serialized_player(match.player1),self._serialized_player(match.player2))
-        }
-        return serialized_match
 
 
-    def _deserialized_infos_tour(self, serialized_infos_tour):
-        infos_tournament = []
-        def _deserialized_step(serialized_info_tour):
-            tournament_name = serialized_info_tour['tournament_name']
-            start_time = serialized_info_tour['start_time']
-            tour_number = serialized_info_tour['tour_number']
-            location = serialized_info_tour['location']
-            time_control = serialized_info_tour['time_control']
-            status = serialized_info_tour['status']
-            end_time = serialized_infos_tour['end_time']
-            players = self._deserialized_players(serialized_infos_tour['players'])
+    def update(self, arg, new_value):
+        Tour = Query()
+        self.tournament_table.update({arg: new_value}, Tour.tournament_name == self.tournament_name)
 
-            tournament = Tournament(tournament_name=tournament_name,
-                                    start_time=start_time,
-                                    tour_number=tour_number,
-                                    location=location,
-                                    time_control=time_control,
-                                    status=status,
-                                    end_time=end_time
-                                    )
-            infos_tournament.append(tournament)
-        for serialized_info_tour in serialized_infos_tour:
-            _deserialized_step(serialized_info_tour)
-        return infos_tournament
+    def update_data_players(self): #, arg, new_value):
+        #self.tournament_players = self.tournament_table.all()[0]['players'][0]
+        #print(self.tournament_table.all()[0]['players'][0])
+        Player = Query()
+        #print(self.tournament_table.search(Player.players.last_name == 'Sydney')) #self.tournament_name))
+        #print(self.tournament_table.update({'score' : 333}, Player.players == self.tournament_table.all()[0]['players'][0]))
+        #print(self.tournament_table)
+        pass
+
+
+
+
+
+# --------------------------------------------------------------
+# --------------------------------------------------------------
+
+
+    def _deserialized_tournament(self, serialized_tournament):
+        tournament_name = serialized_tournament['tournament_name']
+        start_time = serialized_tournament['start_time']
+        tour_number = serialized_tournament['tour_number']
+        location = serialized_tournament['location']
+        time_control = serialized_tournament['time_control']
+        status = serialized_tournament['status']
+        end_time = serialized_tournament['end_time']
+        players = [self._deserialized_player(player) for player in serialized_tournament['players']]
+        rounds = [self._deserialized_round(round) for round in serialized_tournament['rounds']]
+        tournament = Tournament(tournament_name=tournament_name,
+                                start_time=start_time,
+                                tour_number=tour_number,
+                                location=location,
+                                time_control=time_control,
+                                status=status,
+                                end_time=end_time
+                                )
+        tournament.players = players
+        tournament.rounds = rounds
+        return tournament
+
+
+    def _deserialized_round(self,serialized_round):
+        round = Round('Round')
+        for i in range(len(serialized_round)):
+            player1 = serialized_round['Round'][i]['match'][0]
+            player2 = serialized_round['Round'][i]['match'][1]
+            round.add_match(self._deserialized_player(player1),
+                             self._deserialized_player(player2))
+        return round
+
+    def _deserialized_rounds(self,serialized_rounds):
+        rounds = []
+        for i in range(len(serialized_rounds)-1):
+            rounds.append(self._deserialized_round(serialized_rounds[i+1]))
+        return rounds
+
+    def deserialized_matchs(self, serialized_matchs):
+        player1 = serialized_matchs['match'][0]
+        player2 = serialized_matchs['match'][1]
+        matchs = []
+        match = Match(self._deserialized_player(player1),self._deserialized_player(player2))
+        matchs.append(match)
+        return match
+
+    def _deserialized_player(self, serialized_player):
+        first_name = serialized_player['first_name']
+        last_name = serialized_player['last_name']
+        date_birth = serialized_player['date_birth']
+        sexe = serialized_player['sexe']
+        elo = serialized_player['elo']
+        id = serialized_player['id']
+        score = serialized_player['score']
+        opponents = serialized_player['opponents']
+        player = Player(first_name=first_name, last_name=last_name,
+                        date_birth=date_birth, sexe=sexe, elo=elo,
+                        score=score)
+        player.id = id
+        player.opponents = opponents
+        return player
 
     def _deserialized_players(self, serialized_players):
         players = []
-        def _deserialized_step(serialized_player):
-            first_name = serialized_player['first_name']
-            last_name = serialized_player['last_name']
-            date_birth = serialized_player['date_birth']
-            sexe = serialized_player['sexe']
-            elo = serialized_player['elo']
-            id = serialized_player['id']
-            score = serialized_player['score']
-            opponents = serialized_player['opponents']
-            player = Player(first_name=first_name, last_name=last_name,
-                            date_birth=date_birth, sexe=sexe, elo=elo,
-                            score=score)
-            player.id = id
-            player.opponents = opponents
-            players.append(player)
-
         for serialized_player in serialized_players:
-            _deserialized_step(serialized_player)
+            players.append(self._deserialized_player(serialized_player))
         return players
 
 
 
 
-    def insert_infos_tour(self, infos_tour):
-        self.tournament_table.insert(self._serialized_infos_tour(infos_tour))
+
+    def load_tournament(self):
+        serialized_tournament = self.tournament_table.all()[0]
+        # print(self.tournament_table.all()[0]['tournament'][0]['Round'][0]['match'][0])
+        tournament = self._deserialized_tournament(serialized_tournament)
+        return tournament
+
+    def save_tournament(self, tournament):
+        #print(tournament.rounds[0].matchs[0])
+        self.tournament_table.insert(self.serialized_tournament(tournament))
+
+
+
+
+
+    def add_round(self, round):
+        print(round.matchs[0])
+        self.tournament_table.insert(self._serialized_round(round))
+
+
 
     def insert_round(self, round):
-        self.tournament_table.insert(self.serialized_round(round))
+        self.tournament_table.insert(self._serialized_round(round))
+
+
+    def load_rounds(self):
+        serialized_rounds = self.tournament_table.all()
+        return self._deserialized_rounds(serialized_rounds)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 """
+    def load_matchs(self):
+        serialized_round = self.tournament_table.all()[1]
+        serialized_matchx = serialized_round['Round']
+        serialized_matchs = [serialized_matchx[0], serialized_matchx[1],
+                             serialized_matchx[2], serialized_matchx[3]
+                             ]
+        return self.deserialized_matchs(serialized_matchs)
+
+
+
+    def load_players(self):
+        serialized_round = self.tournament_table.all()[1]
+        serialized_matchs = serialized_round['Round']
+        serialized_match = serialized_matchs[3]
+        serialized_players = serialized_match['match']
+        return self._deserialized_players(serialized_players)
+
+
+
+
+        for key, value in serialized_infos_tour:
+            if value["status"] == "open":
+                print(f"id:{key}  |", value["tournament_name"], value["start_time"])
+
+
+
 
 # -----------------------------------------
 #self, tournament_name, location, start_time, tour_number, time_control, status=None
@@ -222,7 +314,40 @@ test_save.insert_round(round1)
 
 
 
+        def _deserialized_step(serialized_info_tour):
+            pass
+            #print (serialized_info_tour['players'][0])
 
+            #for key, value in serialized_info_tour['players'][0].items():
+            #    print(key,value)
+                #print(value)
+                #if value["status"] == "open":
+                #print(f"id:{key}  |", value["first_name"], value["start_time"])
+
+            
+            tournament_name = serialized_info_tour['tournament_name']
+            start_time = serialized_info_tour['start_time']
+            tour_number = serialized_info_tour['tour_number']
+            location = serialized_info_tour['location']
+            time_control = serialized_info_tour['time_control']
+            status = serialized_info_tour['status']
+            end_time = serialized_info_tour['end_time']
+            players = self._deserialized_players(serialized_info_tour['players'])
+
+            tournament = Tournament(tournament_name=tournament_name,
+                                    start_time=start_time,
+                                    tour_number=tour_number,
+                                    location=location,
+                                    time_control=time_control,
+                                    status=status,
+                                    end_time=end_time
+                                    )
+            infos_tournament.append(tournament)
+        
+        for serialized_info_tour in serialized_infos_tour:
+            _deserialized_step(serialized_info_tour)
+
+        #return infos_tournament
 """
 
 
@@ -233,6 +358,59 @@ test_save.insert_round(round1)
 
 
 
+
+
+
+"""
+    def _serialized_roundx(self, round):
+        rounds = []
+        #self._serialized_round(round)
+        rounds.append(self._serialized_round(round))
+        return rounds
+
+
+
+    def _serialized_infos_tour(self, infos_tour):
+        serialized_infos_tour = {
+        'tournament_name': infos_tour.tournament_name,
+        'start_time': infos_tour.start_time,
+        'tour_number': infos_tour.tour_number,
+        'location': infos_tour.location,
+        'time_control': infos_tour.time_control,
+        'status': infos_tour.status,
+        'end_time' : infos_tour.end_time,
+        'players' : (self._serialized_player(infos_tour.players[0]),
+                     self._serialized_player(infos_tour.players[1]),
+                     self._serialized_player(infos_tour.players[2]),
+                     self._serialized_player(infos_tour.players[3]),
+                     self._serialized_player(infos_tour.players[4]),
+                     self._serialized_player(infos_tour.players[5]),
+                     self._serialized_player(infos_tour.players[6]),
+                     self._serialized_player(infos_tour.players[7])
+                         )
+        #'rounds' : (self._serialized_round())
+        }
+        return serialized_infos_tour
+
+
+
+
+
+
+    def _serialized_rounds(self, rounds):
+        rounds_list = []
+        for round in rounds:
+            rounds_list.append(self._serialized_round(round))
+        return rounds_list
+
+        serialized_rounds = {
+                'Rounds' : (self._serialized_round(rounds[0]),
+                            self._serialized_round(rounds[1]),
+                            self._serialized_round(rounds[2]),
+                            self._serialized_round(rounds[3]),
+                            )
+        }
+        return serialized_rounds
 
 
 
@@ -354,7 +532,7 @@ class DataTournamentPlayers:
 
 
 #--------------------------------------------------------------------------
-"""
+
     def __init__(self, tournament_name): #, location, start_time, tour_number, time_control, status):
         self.tournament_name = tournament_name
         #self.location = location
@@ -384,4 +562,38 @@ class DataTournamentPlayers:
                 return False
 
 
-"""
+
+
+
+
+
+
+        for serialized_match in serialized_matchs:
+            serialized_players = serialized_match['match']
+            match = self._deserialized_players(serialized_players)
+            matchs.append(match)
+        return matchs
+
+    def _deserialized_players(self, serialized_players):
+        players = []
+        def _deserialized_step(serialized_player):
+            first_name = serialized_player['first_name']
+            last_name = serialized_player['last_name']
+            date_birth = serialized_player['date_birth']
+            sexe = serialized_player['sexe']
+            elo = serialized_player['elo']
+            id = serialized_player['id']
+            score = serialized_player['score']
+            opponents = serialized_player['opponents']
+            player = Player(first_name=first_name, last_name=last_name,
+                            date_birth=date_birth, sexe=sexe, elo=elo,
+                            score=score)
+            player.id = id
+            player.opponents = opponents
+            players.append(player)
+
+        for serialized_player in serialized_players:
+            _deserialized_step(serialized_player)
+        return players
+
+    """
