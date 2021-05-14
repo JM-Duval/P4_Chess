@@ -18,6 +18,7 @@ from model.player import Player
 
 
 class DataTournament:
+
     def __init__(self, tournament_name):
         self.tournament_name = tournament_name
         self.name_table = self.tournament_name
@@ -38,20 +39,17 @@ class DataTournament:
         'status': tournament.status,
         'end_time' : tournament.end_time,
         'players' : [self._serialized_player(player) for player in tournament.players],
-        'rounds' : [self._serialized_round(round) for round in tournament.rounds] #self._serialized_rounds(tournament.rounds)
+        'rounds' : [self._serialized_round(round) for round in tournament.rounds]
         }
         return serialized_tournament
 
     def _serialized_round(self, round):
-        serialized_round = {
-                'Round' : [self._serialized_match(match) for match in round.matchs]
-                           }
-        return serialized_round
+        return [self._serialized_match(match) for match in round.matchs]
 
     def _serialized_match(self, match):
         serialized_match = {
             'match' : (self._serialized_player(match.player1),
-                       self._serialized_player(match.player2))
+                      self._serialized_player(match.player2))
         }
         return serialized_match
 
@@ -70,25 +68,6 @@ class DataTournament:
 
 
 
-
-    def update(self, arg, new_value):
-        Tour = Query()
-        self.tournament_table.update({arg: new_value}, Tour.tournament_name == self.tournament_name)
-
-    def update_data_players(self): #, arg, new_value):
-        #self.tournament_players = self.tournament_table.all()[0]['players'][0]
-        #print(self.tournament_table.all()[0]['players'][0])
-        Player = Query()
-        #print(self.tournament_table.search(Player.players.last_name == 'Sydney')) #self.tournament_name))
-        #print(self.tournament_table.update({'score' : 333}, Player.players == self.tournament_table.all()[0]['players'][0]))
-        #print(self.tournament_table)
-        pass
-
-
-
-
-
-# --------------------------------------------------------------
 # --------------------------------------------------------------
 
 
@@ -116,27 +95,13 @@ class DataTournament:
 
 
     def _deserialized_round(self,serialized_round):
-        round = Round('Round')
+        round = Round('round')
         for i in range(len(serialized_round)):
-            player1 = serialized_round['Round'][i]['match'][0]
-            player2 = serialized_round['Round'][i]['match'][1]
+            player1 = serialized_round[i]['match'][0]
+            player2 = serialized_round[i]['match'][1]
             round.add_match(self._deserialized_player(player1),
-                             self._deserialized_player(player2))
+                            self._deserialized_player(player2))
         return round
-
-    def _deserialized_rounds(self,serialized_rounds):
-        rounds = []
-        for i in range(len(serialized_rounds)-1):
-            rounds.append(self._deserialized_round(serialized_rounds[i+1]))
-        return rounds
-
-    def deserialized_matchs(self, serialized_matchs):
-        player1 = serialized_matchs['match'][0]
-        player2 = serialized_matchs['match'][1]
-        matchs = []
-        match = Match(self._deserialized_player(player1),self._deserialized_player(player2))
-        matchs.append(match)
-        return match
 
     def _deserialized_player(self, serialized_player):
         first_name = serialized_player['first_name']
@@ -154,6 +119,55 @@ class DataTournament:
         player.opponents = opponents
         return player
 
+
+
+
+    def load_tournament(self):
+        serialized_tournament = self.tournament_table.all()[0]
+        tournament = self._deserialized_tournament(serialized_tournament)
+        return tournament
+
+    def save_tournament(self, tournament):
+        self.tournament_table.insert(self.serialized_tournament(tournament))
+
+    def delete(self):
+        self.tournament_table.truncate()
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+
+
+
+
+
+
+    def deserialized_match(self, serialized_match):
+        player1 = serialized_match['match'][0]
+        player2 = serialized_match['match'][1]
+        matchs = []
+        match = Match(self._deserialized_player(player1),self._deserialized_player(player2))
+        matchs.append(match)
+        return match
+        
+        
+    def _deserialized_rounds(self,serialized_rounds):
+        rounds = []
+        for i in range(len(serialized_rounds)-1):
+            rounds.append(self._deserialized_round(serialized_rounds[i+1]))
+        return rounds
+
+
     def _deserialized_players(self, serialized_players):
         players = []
         for serialized_player in serialized_players:
@@ -161,19 +175,25 @@ class DataTournament:
         return players
 
 
+    def update(self, arg, new_value):
+        Tour = Query()
+        self.tournament_table.update({arg: new_value}, Tour.tournament_name == self.tournament_name)
+        print()
+
+    def update_data_players(self): #, arg, new_value):
+        #self.tournament_players = self.tournament_table.all()[0]['players'][0]
+        #print(self.tournament_table.all()[0]['players'][0])
+        Player = Query()
+        #print(self.tournament_table.search(Player.players.last_name == 'Sydney')) #self.tournament_name))
+        #print(self.tournament_table.update({'score' : 333}, Player.players == self.tournament_table.all()[0]['players'][0]))
+        #print(self.tournament_table)
+        pass
 
 
 
-    def load_tournament(self):
-        serialized_tournament = self.tournament_table.all()[0]
-        # print(self.tournament_table.all()[0]['tournament'][0]['Round'][0]['match'][0])
-        tournament = self._deserialized_tournament(serialized_tournament)
-        return tournament
 
-    def save_tournament(self, tournament):
-        #print(tournament.rounds[0].matchs[0])
-        self.tournament_table.insert(self.serialized_tournament(tournament))
 
+# --------------------------------------------------------------
 
 
 
@@ -186,7 +206,7 @@ class DataTournament:
 
     def insert_round(self, round):
         self.tournament_table.insert(self._serialized_round(round))
-
+        #print(a)
 
     def load_rounds(self):
         serialized_rounds = self.tournament_table.all()
@@ -203,14 +223,6 @@ class DataTournament:
 
 
 
-
-
-
-
-
-
-
-"""
     def load_matchs(self):
         serialized_round = self.tournament_table.all()[1]
         serialized_matchx = serialized_round['Round']

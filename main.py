@@ -29,7 +29,7 @@ player_Miller = Player('Jack', 'Miller', '26', 'Man', 6)
 player_Marquez = Player('Marc', 'Marquez', '28', 'Man', 15)
 player_Zarco = Player('Johan', 'Zarco', '30', 'Man', 5)
 player_Morbidelli = Player('Franco', 'Morbidelli', '26', 'Man', 8)
-#players = [player_Rins, player_Martin, player_Mir, player_Rossi, player_Miller, player_Marquez, player_Zarco, player_Morbidelli]
+players = [player_Rins, player_Martin, player_Mir, player_Rossi, player_Miller, player_Marquez, player_Zarco, player_Morbidelli]
 
 
 
@@ -37,21 +37,27 @@ player_Morbidelli = Player('Franco', 'Morbidelli', '26', 'Man', 8)
 if __name__ == "__main__":
 
     """
+    round_1 = TournamentControler(players)
+    round_1.start_tournament()
+    round_1.run_first_round()
+    round_1.stop_tournament()
 
-    run = TournamentControler(players)
-    run.start_tournament()
-    run.run_first_round('Round 1')
-
-    for i in range (3):
-        round_name = 'Round ' + str(2 + i)
-        run.run_next_round(round_name)
-    run.close_tournament()
     """
+    
+    data = DataTournament('Word_tour_Tournament_5')
+    tour = data.load_tournament()
+    players = tour.players
+    
+    round_2 = TournamentControler(players, tour)
+    round_2.run_next_round()
+    round_2.close_tournament()
 
-    
-    
-    data_test = DataTournament('Word_tour_Tournament_5')
-    run3 = data_test.load_tournament()
-    players = run3.players
-    run2 = TournamentControler(players)
-    run2.restart_tournament(run3)
+    """
+    round_3 = TournamentControler(players, tour)
+    round_3.run_next_round()
+    round_3.stop_tournament()
+
+    round_4 = TournamentControler(players, tour)
+    round_4.run_next_round()
+    round_4.stop_tournament()
+    """
