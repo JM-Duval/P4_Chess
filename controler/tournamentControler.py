@@ -12,17 +12,83 @@ from model.round import Round
 from model.match import Match
 from model.player import Player
 from model.dataBaseTournamentModel import DataTournament #, DataTournamentPlayers
+from model.menuModel import AllTournaments
+from controler.menuControler import select_players
 from view.tournamentView import *
 from view.gamesheetView import *
 from view.rankingView import display_score, display_winner
 
 
+#def __init__(self, tournament_name, location, start_time, tour_number,
+#             time_control, status=None, end_time=None):
+# de tournament_view => tournament_name, location, tour_number, time_control
+
+
+def new_tournament():
+    tournament_name, location, tour_number, time_control = InputTournament().infos()
+    start_time = None
+    return tournament_name, location, start_time, tour_number, time_control
+
+def restart_tournament(tournament_name):
+    tournament = DataTournament(tournament_name).load_tournament()
+    location = tournament.location
+    start_time = tournament.start_time
+    end_time = tournament.end_time
+    tour_number = tournament.tour_number
+    time_control = tournament.time_control
+    players = tournament.players
+    rounds = tournament.rounds
+    description = tournament.description
+    status = tournament.status
+    return tournament_name, location, start_time, end_time, tour_number, \
+           time_control, players, rounds, description, status
+
+
+def run_tournament(tournament_name = None):
+    if tournament_name == None:
+        tournament_name, location, start_time, tour_number, \
+        time_control = new_tournament()
+        tournament_name = tournament_name
+        start_time = None
+        tour_number = tour_number
+        tournament = Tournament(tournament_name,
+                                     location,
+                                     start_time,
+                                     tour_number,
+                                     time_control)
+        tournament.players = select_players()
+
+    else:
+        tournament_name, location, start_time, end_time, tour_number, \
+        time_control, players, rounds, description, status \
+            =restart_tournament(tournament)
+        self.tournament_name = tournament_name
+        self.tour_number = tour_number
+        self.tournament = Tournament(tournament_name,
+                                     location,
+                                     start_time,
+                                     tour_number,
+                                     time_control,
+                                     status)
+        self.tournament.players = players
+        self.tournament.rounds = rounds
+
+    self.nb_match = floor((len(tournament.players) / 2))
+
+run_tournament()
+
+
+
+
+# -----------------------------------------------------------
+
 class TournamentControler:
 
-    def __init__(self, players, tournament = None):
+    def __init__(self, players, tournament):
 
         if tournament == None:
-            tournament_name, location, start_time, tour_number, time_control = self.new_tournament()
+            tournament_name, location, start_time, tour_number, \
+            time_control = self.new_tournament()
             self.tournament_name = tournament_name
             #self.start_time = datetime.datetime.today().strftime('%d-%m-%y at %H:%M')
             self.start_time = None
@@ -36,7 +102,8 @@ class TournamentControler:
 
         else:
             tournament_name, location, start_time, end_time, tour_number, \
-            time_control, players, rounds, description, status =self.restart_tournament(tournament)
+            time_control, players, rounds, description, status \
+                =self.restart_tournament(tournament)
             self.tournament_name = tournament_name
             self.tour_number = tour_number
             self.tournament = Tournament(tournament_name,
@@ -52,7 +119,6 @@ class TournamentControler:
 
     def new_tournament(self):
         tournament_name, location, tour_number, time_control = data_input_tournament()
-        #start_time = datetime.datetime.today().strftime('%d-%m-%y at %H:%M')
         start_time = None
         return tournament_name, location, start_time, tour_number, time_control
 

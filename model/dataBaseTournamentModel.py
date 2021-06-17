@@ -71,10 +71,6 @@ class DataTournament:
         return serialized_player
 
 
-
-# --------------------------------------------------------------
-
-
     def _deserialized_tournament(self, serialized_tournament):
         tournament_name = serialized_tournament['tournament_name']
         start_time = serialized_tournament['start_time']
@@ -126,20 +122,15 @@ class DataTournament:
 
 #--------------------------------------------------------------------------------
 
+    def save_tournament(self, tournament):
+        self.tournament_table.insert(self.serialized_tournament(tournament))
+
+
     def load_tournament(self):
         Tour = Query()
         serialized_tournament = self.tournament_table.search(Tour.tournament_name == self.tournament_name)
         tournament = self._deserialized_tournament(serialized_tournament[0])
         return tournament
-
-    def sorted_alpha(self):
-        return sorted(self.load_tournament().players, key=lambda x: x.last_name)
-
-    def sorted_score(self):
-        return sorted(self.load_tournament().players, key=lambda x: x.score, reverse=True)
-
-    def save_tournament(self, tournament):
-        self.tournament_table.insert(self.serialized_tournament(tournament))
 
     def update_data_players(self, tournament_name, players):
         Tour = Query()
@@ -174,3 +165,10 @@ class DataTournament:
 
     def insert(self, new_tournament):
         self.tournament_table.insert(self.serialized_tournament(new_tournament))
+
+    def sorted_alpha(self):
+        return sorted(self.load_tournament().players, key=lambda x: x.last_name)
+
+    def sorted_score(self):
+        return sorted(self.load_tournament().players, key=lambda x: x.score, reverse=True)
+

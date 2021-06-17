@@ -7,6 +7,7 @@ import sys
 sys.path[:0]=['../']
 from controler.tournamentControler import TournamentControler
 from model.dataBaseTournamentModel import DataTournament
+from controler.menuControler import *
 from model.player import Player
 
 player1 = Player('Annie', 'Cordy', '16/06/1928', 'w', 8)  #9
@@ -35,8 +36,10 @@ players = [player_Rins, player_Martin, player_Mir, player_Rossi, player_Miller, 
 
 
 if __name__ == "__main__":
+    main_menu()
 
-    launch = 2 #int(input('Round : '))
+
+"""    launch = 2 #int(input('Round : '))
 
     if launch == 1:
         round_1 = TournamentControler(players)
@@ -70,3 +73,4 @@ if __name__ == "__main__":
         round_4 = TournamentControler(players, tour)
         round_4.run_round()
         #round_4.close_tournament()
+"""
