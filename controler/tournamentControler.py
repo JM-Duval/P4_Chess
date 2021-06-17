@@ -24,7 +24,8 @@ class TournamentControler:
         if tournament == None:
             tournament_name, location, start_time, tour_number, time_control = self.new_tournament()
             self.tournament_name = tournament_name
-            self.start_time = datetime.datetime.today().strftime('%d-%m-%y at %H:%M')
+            #self.start_time = datetime.datetime.today().strftime('%d-%m-%y at %H:%M')
+            self.start_time = None
             self.tour_number = tour_number
             self.tournament = Tournament(tournament_name,
                                          location,
@@ -51,7 +52,8 @@ class TournamentControler:
 
     def new_tournament(self):
         tournament_name, location, tour_number, time_control = data_input_tournament()
-        start_time = datetime.datetime.today().strftime('%d-%m-%y at %H:%M')
+        #start_time = datetime.datetime.today().strftime('%d-%m-%y at %H:%M')
+        start_time = None
         return tournament_name, location, start_time, tour_number, time_control
 
     def restart_tournament(self, tournament):
@@ -70,57 +72,44 @@ class TournamentControler:
 
 
     def start_tournament(self):
+        self.start_time = datetime.datetime.today().strftime('%d-%m-%y at %H:%M')
         self.tournament.status = 'open'
+        self.save_tournament()
         display_start_time(self.start_time)
 
-    def stop_tournament(self):
-        self.save_tournament()
-
-    def save_tournament(self):
-        DataTournament(self.tournament_name).delete()
-        DataTournament(self.tournament_name).save_tournament(self.tournament)
-
-    def update_tour_number(self):
-        self.tournament.tour_number +=1
-
     def close_tournament(self):
-        display_winner(self.tournament_name, self.tournament.players[0].first_name)
         self.tournament.end_time = datetime.datetime.today().strftime('%d-%m-%y at %H:%M')
-        self.tournament.status = "closed"
+        self.tournament.status = 'closed'
         self.save_tournament()
         display_end_time(self.tournament.end_time)
 
-    # --  Round 1 -----------------------------------------------------
-    def run_first_round(self):
-        round_name = 'Round' + str(self.tournament.tour_number)
-        display_round(round_name)
-        self.tournament.players.sort(key=lambda x: x.elo)
-        round1 = Round('Round 1')
-        self.tournament.add_round(round1)
-        for i in range (self.nb_match):
-            round1.add_match(self.tournament.players[i],
-                             self.tournament.players[i+self.nb_match])
-
-        for match in round1.matchs: # add id player in opponent_list
-            match.player1.add_opponent(match.player2.id)
-            match.player2.add_opponent(match.player1.id)
-
-        display_game_sheet('Round 1', round1.matchs)
-
-        for i in range (self.nb_match): #add score player and save
-            self._handle_score(round1.matchs[i].player1,
-                               round1.matchs[i].player2)
-
-        display_score(self.tournament.players)
+    def save_tournament(self):
+        if DataTournament().exist(self.tournament_name):
+            DataTournament(self.tournament_name).update_tour_number(
+                self.tournament_name, self.tournament.tour_number)
+            DataTournament(self.tournament_name).update_data_players(
+                self.tournament_name, self.tournament.players)
+            DataTournament(self.tournament_name).update_rounds(
+                self.tournament_name, self.tournament.rounds)
+            DataTournament(self.tournament_name).update_status(
+                self.tournament_name, self.tournament.status)
+            print('*********** Partie Sauvegardee ***********')
+        else:
+            DataTournament(self.tournament_name).save_tournament(self.tournament)
+            print('*********** Nouvelle partie enregistree  ***********')
 
 
-    # --  Next Rounds  ---------------------------------
-    def run_next_round(self):
-        if self.tournament.tour_number < 4 :
-            round_name = 'Round' + str(self.tournament.tour_number+1)
-            display_round(round_name)
-            self.tournament.players.sort(key=lambda x: x.elo)
-            self.tournament.players.sort(key=lambda x: x.score, reverse=True)
+    # -- Rounds  ---------------------------------------
+    def run_round(self):
+        # update tour number
+        self.tournament.tour_number += 1
+        if self.tournament.tour_number <= 4 :
+
+            # sorted players
+            self.sorted_players(self.tournament.tour_number)
+
+            # build round
+            round_name = 'Round' + str(self.tournament.tour_number)
             roundx = Round(round_name)
             self.tournament.add_round(roundx)
             x = 0
@@ -129,27 +118,36 @@ class TournamentControler:
                                  self.checked_opponents()[i+x+1])
                 x += 1
 
-            for match in roundx.matchs: # add id player in opponent_list
+            # add id player in opponent_list
+            for match in roundx.matchs:
                 match.player1.add_opponent(match.player2.id)
                 match.player2.add_opponent(match.player1.id)
 
-            display_score(self.tournament.players)
-            display_game_sheet(round_name, roundx.matchs)
-
+            # update score player
             for i in range (self.nb_match):
                 self._handle_score(roundx.matchs[i].player1,
                                    roundx.matchs[i].player2)
 
-            display_score(self.tournament.players)
-            self.update_tour_number()
+            # save file
+            self.save_tournament()
 
+            # display
+            display_round(round_name)
+            display_game_sheet(roundx.matchs)
+            display_score(self.tournament.players)
             if self.tournament.tour_number == 4:
                 display_winner(self.tournament_name, self.tournament.players[0])
 
         else:
-            print('Tournoi terminé')
             display_winner(self.tournament_name, self.tournament.players[0])
 
+
+    def sorted_players(self, tour_number):
+        if tour_number == 1:
+            self.tournament.players.sort(key=lambda x: x.elo)
+        else:
+            self.tournament.players.sort(key=lambda x: x.elo)
+            self.tournament.players.sort(key=lambda x: x.score, reverse=True)
 
     def checked_opponents(self):
         players_sorted = []

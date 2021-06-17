@@ -10,9 +10,9 @@ from controler.checkerInputControler import CheckerData
 
 # ---------------------- Data tournament ---------------------------
 def data_input_tournament():
-    tournament_name = 'Word_tour_Tournament_5' #enter_word('tournament_name')
-    location = 'Sydney' #enter_word('location')
-    tour_number = 1
+    tournament_name = 'Word_tour_Tournament_13' #'Word_tour_Moto_GP' #enter_word('tournament_name')
+    location = 'France_Le_Mans' #enter_word('location')
+    tour_number = 0
     time_control = '1' #input('Bullet / Blitz / Coup rapide :')
     rounds = []
     players = []
@@ -102,14 +102,14 @@ def enter_score(player1, player2):
                        f'| match nul \t| : tapez 3 \n')
     """
     if winner == str(1):
-        print(f'{player1.first_name}: + 1 pt')
+        #print(f'{player1.first_name}: + 1 pt')
         return 1, 0
 
     elif winner == str(2):
-        print(f'{player2.first_name}: + 1 pt')
+        #print(f'{player2.first_name}: + 1 pt')
         return 0, 1
 
     elif winner == str(3):
-        print(f'{player1.first_name}\t: +0.5 pts\n'
-              f'{player2.first_name}\t: +0.5 pts')
+        #print(f'{player1.first_name}\t: +0.5 pts\n'
+        #      f'{player2.first_name}\t: +0.5 pts')
         return 0.5,0.5

@@ -12,7 +12,7 @@ def display_end_time(end_time):
     print (f'Fin du tournoi: {end_time}')
 
 # -- Feuille de match --
-def display_game_sheet (round_name, matchs):
+def display_game_sheet (matchs):
     match_number=1
     for i in matchs:
         print (f'\n Match {match_number}:| {i.player1.first_name} \t|vs | {i.player2.first_name}\t|')
@@ -26,5 +26,5 @@ def display_opponents (player):
 
 # -- Affiche n° Round --
 def display_round(round_name):
-    print (f'\n*********  {round_name}  *********\n')
+    print (f'\n*********  {round_name}  *********')
 

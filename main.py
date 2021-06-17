@@ -36,28 +36,37 @@ players = [player_Rins, player_Martin, player_Mir, player_Rossi, player_Miller, 
 
 if __name__ == "__main__":
 
-    """
-    round_1 = TournamentControler(players)
-    round_1.start_tournament()
-    round_1.run_first_round()
-    round_1.stop_tournament()
+    launch = 2 #int(input('Round : '))
 
-    """
-    
-    data = DataTournament('Word_tour_Tournament_5')
-    tour = data.load_tournament()
-    players = tour.players
-    
-    round_2 = TournamentControler(players, tour)
-    round_2.run_next_round()
-    round_2.close_tournament()
+    if launch == 1:
+        round_1 = TournamentControler(players)
+        round_1.start_tournament()
+        round_1.run_round()
+        #round_1.stop_tournament()
 
-    """
-    round_3 = TournamentControler(players, tour)
-    round_3.run_next_round()
-    round_3.stop_tournament()
+    elif launch == 2:
+        tournament = DataTournament('Word_tour_Moto_GP')
+        tour = tournament.load_tournament()
+        players = tour.players
 
-    round_4 = TournamentControler(players, tour)
-    round_4.run_next_round()
-    round_4.stop_tournament()
-    """
+        round_2 = TournamentControler(players, tour)
+        round_2.run_round()
+        #round_2.stop_tournament()
+
+    elif launch == 3:
+        tournament = DataTournament('Word_tour_Moto_GP')
+        tour = tournament.load_tournament()
+        players = tour.players
+
+        round_3 = TournamentControler(players, tour)
+        round_3.run_round()
+        #round_3.stop_tournament()
+
+    elif launch == 4:
+        tournament = DataTournament('Word_tour_Moto_GP')
+        tour = tournament.load_tournament()
+        players = tour.players
+
+        round_4 = TournamentControler(players, tour)
+        round_4.run_round()
+        #round_4.close_tournament()

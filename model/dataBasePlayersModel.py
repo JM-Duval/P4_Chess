@@ -7,6 +7,7 @@ from tinydb import TinyDB, Query, where
 # TinyDB is the database
 # Query allows to query the data base
 # where allows to refine the search
+import os
 import sys
 sys.path[:0]=['../']
 from pathlib import Path
@@ -19,7 +20,7 @@ class DataBasePlayers:
         self.name_file = 'players_chess.json'
         origin_path = (sys.path[(len(sys.path)) - 2][:-4])
         path_data_players = os.path.join(origin_path, 'data/list_players')
-        db = TinyDB(path_data_players/self.name_file)
+        db = TinyDB(os.path.join(path_data_players, self.name_file))
         self.players_table = db.table(self.name_table)
 
     def search(self, player):
@@ -54,6 +55,8 @@ class DataBasePlayers:
         for serialized_player in serialized_players:
             _deserialized_step(serialized_player)
         return players
+
+
 
     def insert(self, player):
         if self.search(player.last_name):

@@ -12,14 +12,10 @@ class Match:
         self.score_player2 = 0
 
     def __str__(self):
-        out = f'{self.player1}, {self.player2}'
+        out = f'{self.player1} - {self.player2}'
         return out
 
-
     def info_player(self, player, score):
-        #player_dict = {}
-        #player_dict[player.get_name()] = score
-        #return player_dict
         player_list = []
         player_list.append(player.get_name())
         player_list.append(score)
@@ -40,4 +36,3 @@ class Match:
         list_player2.append(score_player2)
         match_played = (list_player1,list_player2)
         return match_played
-

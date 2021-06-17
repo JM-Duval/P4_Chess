@@ -4,168 +4,137 @@
 It is a first program with MVC structuring."""
 
 import os
-import glob
 import sys
 sys.path[:0]=['../']
-from pathlib import Path
-
-from controler.tournamentControler import TournamentControler
-from model.dataBaseTournamentModel import DataTournament
-from model.dataBasePlayersModel import *
 
 
-path_data_tournament = Path("../data/tournaments")
-path_data_players = Path("../data/list_players")
-if os.path.exists(path_data_tournament):
-    print ('ok')
+def display_home_menu():
+    print()
+    print("   * Menu Principal * ")
+    print()
+    print(" 1 - Commencer un nouveau tournoi")
+    print(" 2 - Reprendre un tournoi")
+    print(" 3 - Enregistrer des joueurs dans la base de donnees")
+    print(" 4 - Afficher les rapports et statistiques des tournois")
+    print(" Q - Quitter le programme")
+    os.system('clear')
+
+def display_statistics_menu():
+    print()
+    print(" * Statistiques menu 1 *")
+    print()
+    print(" 1 - Classement general des joueurs par ordre alphabetique")
+    print(" 2 - Classement general des joueurs par score")
+    print(" 3 - Liste des tournois")
+    print(" Q - Retour au menu precedent")
+
+def display_statistics_tournament_menu():
+    print()
+    print(f" * Statistiques menu 2  *")
+    print()
+    print(" 1 - Classement des joueurs par ordre alphabetique")
+    print(" 2 - Classement des joueurs par score")
+    print(" 3 - Visualiser les rounds")
+    print(" 4 - Visualiser les matchs")
+    print(" Q - Retour au menu precedent")
 
 
-def start_menu():
-    input_start_menu = int(input('********** Menu principal **********\n'
-                   '1 - Lancer un nouveau tournoi\n'
-                   '2 - Reprendre un tournoi\n'
-                   '3 - Enregistrer des joueurs dans la base de données\n'
-                   '4 - Afficher des statistiques\n'
-                   '5 - Sortir du programme\n'))
-    return input_start_menu
+def user_input(range):
+    while True:
+        input_user = input(" Selectionnez votre option >>>  : ")
+        try:
+            if int(input_user) <=range :
+                break
+            else:
+                print(f'Selectionnez un nombre < ou = à {range}')
+        except ValueError:
+            if input_user.upper() == 'Q':
+                break
+            else:
+                print("Oops! Saisie incorrect. Essayez à nouveau...")
+    return input_user
 
 
-def stat_menu():
-    input_stat_menu = int(input('A - Liste des joueurs (par ordre alphabétique)\n'
-           'B - Liste des joueurs (par classement)\n'
-           'C - Liste des tournois\n'
-           'D - Sectionner un tournoi\n'))
-    return input_stat_menu
+def display_list_tournaments(tournaments):
+    print()
+    print(" * Liste des tournois *")
+    print()
+    for i in range(len(tournaments)):
+        print(f" {i+1} - {tournaments[i]}")
+    print (" Q - Retour au menu precedent")
+    return len(tournaments)
 
 
-def list_tour_menu():
-    print ('Selectionner un tournoi: {list_tournament}')
-
-
-
-def tour_menu():
-    input_tour_menu = int(input(('a - Liste des joueurs (par ordre alphabétique)\n'
-           'b - Liste des joueurs (par classement)\n'
-           'c - Liste des Rounds\n'
-           'd - Liste des Matchs')))
-    return input_tour_menu
-
-
-
-
-def save_new_player():
-    pass
-
-def launch_new_tournament():
-    pass
-
-def restart_tournament():
-    pass
-
-def display_statistical():
-    pass
-
-
-
-#  -- Stastistiques -------------------
-class DisplayPlayers:
+class Display:
     def __init__(self):
-        self.list_players = list_players
         pass
 
-    def sorted (self):
-        # par ordre alphabétique
-        # par classement
-        #return sorted_list
-        pass
+    def players(self, players):
+        print('\n - Liste des joueurs triee : ')
+        for player in players:
+            print(player)
 
-    def display (self):
-        # print (self.sorted)
-        pass
+    def tournaments(self, tournaments):
+        print('Liste des Tournois : ')
+        for tournament_name in tournaments:
+            print(tournament_name)
 
-class DisplayTournament:
-    def __init__(self, tournament_name):
-        self.tournanent_name = tournament_name
-        self.list_players = list_players
+    def select_tournament(self, tournaments):
+        x = 1
+        print(f' Selectionner un tournoi ci dessous : ')
+        for tournament_name in tournaments:
+            print(f'{tournament_name} enter {x}')
+            x+=1
+        select_tournament = int(input(' >>> '))
+        return select_tournament
 
-    def display_players(self):
-        # par ordre alphabétique
-        # par classement
-        # vainqueur
-        pass
+    def matchs(self, matchs):
+        print(' - Liste des Matchs : \n')
+        for match in matchs:
+            print(match)
 
-    def display_rounds(self):
-        pass
-
-    def display_matchs(self):
-        pass
-
-# -- Chargement des données du tournoi ---------------------------------
-
-# -- Liste des tournois  ----------
-def display_tournament_list():
-    get_files_tournament = glob.glob(os.path.join(path_data_tournament, '*.json'))
-    files = [os.path.basename(x) for x in get_files_tournament]
-
-    open_tournament = []
-    close_tournament = []
-    for file in files:
-        index = file.index('.')
-        file_name = file[:index]
-        if DataTournament(file_name).status() == 'open':
-            open_tournament.append(file_name)
-        else:
-            close_tournament.append(file_name)
-
-    print(f'\n {len(open_tournament)} tournament(s) unfinished : ')
-    for file_name in open_tournament:
-        print(f'  - {file_name}')
-
-    print(f'\n {len(close_tournament)} tournament(s) finished : ')
-    for file_name in close_tournament:
-        print(f'  - {file_name}')
+    def rounds(self, rounds):
+        print(' - Liste des Rounds : \n')
+        for round in rounds:
+            print(round)
 
 
-display_tournament_list()
-
-# -- Liste des joueurs d'un tournoi -----------------------------------
-
-def display_players_in_tournament(tournament_name, order):
-    players_tour = DataTournamentPlayers(tournament_name, 'Round 1')
-
-    if order == 1:
-        print("Classement des joueurs dans l'ordre alphabetique: ")
-        for i in  players_tour.sorted_alpha():
-            print (f'   {i.last_name} - {i.first_name}')
-    elif order == 2:
-        print ('Classement des joueurs:')
-        for i in players_tour.sorted_score():
-            print (f'   {i.last_name} - {i.score}')
-    else:
-        print ('Fonction de trie pas encore disponible')
 
 
-#display_players_in_tournament('Word_tour_Tournament_2', 1)
-#display_players_in_tournament('Word_tour_Tournament_2', 2)
 
 
-# -- Liste des joueurs inscrits dans la base -----------------------------------
 
-def display_total_players(order):
-    players = DataBasePlayers()
-    #print(players.sorted_alpha())
-    #print(players.sorted_elo())
 
-    if order == 1:
-        print("Classement des joueurs dans l'ordre alphabetique: ")
-        for i in  players.sorted_alpha():
-            print (f'   {i.last_name} - {i.first_name}')
-    elif order == 2:
-        print ('Classement des joueurs:')
-        for i in players.sorted_elo():
-            print (f'   {i.last_name} - {i.elo}')
-    else:
-        print ('Fonction de trie pas encore disponible')
+"""
+    def main_menu(self):
+        input_main_menu = int(input('********** Menu principal **********\n'
+                                     '1 - Lancer un nouveau tournoi\n'
+                                     '2 - Reprendre un tournoi\n'
+                                     '3 - Enregistrer des joueurs dans la base de données\n'
+                                     '4 - Afficher des statistiques\n'
+                                     '5 - Sortir du programme\n'
+                                     ' >>> '))
+        return input_main_menu
 
-#display_total_players(1)
-#display_total_players(2)
+    def statistics_menu(self):
+        input_statistics_menu = int(input('***** Menu Statistiques *****\n'
+            '1 - Classement général des joueurs par ordre alphabétique\n'
+            '2 - Classement général des joueurs par score\n'
+            '3 - Liste des tournois\n'
+            '4 - Visualiser un tournoi\n'
+            '5 - Retour\n'
+            ' >>> ')
+        )
+        return input_statistics_menu
+
+    def statistics_menu_2(self):
+        input_statistics_menu_2 = int(input(
+            '1 - Classement des joueurs par ordre alphabétique\n'
+            '2 - Classement des joueurs par score\n'
+            '3 - Visualiser les rounds\n'
+            '4 - Visualiser les matchs\n'
+            '5 - Retour\n'
+            ' >>> ')
+        )
+        return input_statistics_menu_2
+"""
