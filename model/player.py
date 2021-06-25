@@ -41,3 +41,9 @@ class Player:
 
     def clean_opponents(self):
         del self.opponents
+
+    def __eq__(self, other):
+        if self.id == other.id:
+            return True
+        else:
+            return False

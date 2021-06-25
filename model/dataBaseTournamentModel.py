@@ -125,7 +125,6 @@ class DataTournament:
     def save_tournament(self, tournament):
         self.tournament_table.insert(self.serialized_tournament(tournament))
 
-
     def load_tournament(self):
         Tour = Query()
         serialized_tournament = self.tournament_table.search(Tour.tournament_name == self.tournament_name)
@@ -166,9 +165,56 @@ class DataTournament:
     def insert(self, new_tournament):
         self.tournament_table.insert(self.serialized_tournament(new_tournament))
 
-    def sorted_alpha(self):
+    def get_sorted_players_alpha(self):
         return sorted(self.load_tournament().players, key=lambda x: x.last_name)
 
-    def sorted_score(self):
+    def get_sorted_players_score(self):
         return sorted(self.load_tournament().players, key=lambda x: x.score, reverse=True)
+
+    def get_rounds(self):
+        return [self.load_tournament().rounds[i].round_name
+                for i in range(len(self.load_tournament().rounds))]
+
+    def get_matchs(self):
+        matchs = []
+        for round in self.load_tournament().rounds:
+            [matchs.append(players) for players in round.matchs]
+        return matchs
+
+    def get_infos_tour (self):
+        tour = self.load_tournament()
+        return tour.tournament_name, tour.location, tour.start_time, \
+               tour.end_time, tour.tour_number, tour.status, tour.players
+
+
+
+
+class AllTournaments:
+    def __init__(self):
+        self.name_table = 'tournament'
+        self.name_file = 'tournaments.json'
+        origin_path = (sys.path[(len(sys.path)) - 2][:-4])
+        path_data_tournament = os.path.join(origin_path, 'data/tournaments')
+        db = TinyDB(os.path.join(path_data_tournament, self.name_file))
+        self.tournament_table = db.table(self.name_table)
+
+    def list(self):
+        list_tournaments = []
+        [list_tournaments.append(tour['tournament_name']) for tour in
+         self.tournament_table.all()]
+        return list_tournaments
+
+    def status_open(self):
+        list_tournaments_open = []
+        for tour in self.tournament_table.all():
+            if tour['status'] == 'open':
+                list_tournaments_open.append(tour['tournament_name'])
+        return list_tournaments_open
+
+    def status_close(self):
+        list_tournaments_closed = []
+        for tour in self.tournament_table.all():
+            if tour['status'] == 'close':
+                list_tournaments_closed.append(tour)
+        return list_tournaments_closed
 

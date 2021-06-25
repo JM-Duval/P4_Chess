@@ -25,7 +25,7 @@ class DataBasePlayers:
 
     def search(self, player):
         Person = Query()
-        if self.players_table.search(Person.last_name == player):
+        if (self.players_table.search(Person.last_name == player.last_name) and self.players_table.search(Person.first_name == player.first_name) and self.players_table.search(Person.date_birth == player.date_birth)):
             return True
         else:
             return False
@@ -36,7 +36,7 @@ class DataBasePlayers:
         'last_name' : player.last_name,
         'date_birth' : player.date_birth,
         'sexe' : player.sexe,
-        'elo' : player.elo
+        'elo' : player.elo,
         }
         return serialized_player
 
@@ -57,28 +57,20 @@ class DataBasePlayers:
         return players
 
 
-
     def insert(self, player):
-        if self.search(player.last_name):
-            print (f"{player.first_name}.{player.last_name} "
-                   f"existe deja dans la liste" )
+        if self.search(player) == True:
+            return False
         else:
-            self.players_table.insert(self._serialized(player))
-            print (f"{player.first_name}.{player.last_name} à été ajouté" )
-            self.display()
+            print(self.players_table.insert(self._serialized(player)))
+            return True
 
     def load(self):
         serialized_players = self.players_table.all()
         return self._deserialized(serialized_players)
 
     def remove(self, player):
-        if self.search(player):
-            Person = Query()
-            self.players_table.remove(Person.last_name == player)
-            print (f'{player} à été supprimé')
-            self.display()
-        else:
-            print (f"{player} n'existe pas dans la liste" )
+        Person = Query()
+        self.players_table.remove(Person.last_name == player.last_name, Person.elo == player.elo)
 
     def update(self, player, arg, new_value):
         if self.search(player):
@@ -103,3 +95,11 @@ class DataBasePlayers:
 
     def sorted_elo(self):
         return sorted(self.load(), key=lambda x: x.elo)
+
+    def exist(self, player):
+        Player = Query()
+        print(player.id)
+        if len(self.players_table.search(Player.id == player.id)) != 0:
+            return True
+        else:
+            return False

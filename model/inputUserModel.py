@@ -4,13 +4,9 @@
 It is a first program with MVC structuring."""
 
 import datetime
-import sys
-sys.path[:0]=['../']
-from view.tournamentView import *
-from model.player import Player
 
 
-class CheckData:
+class CheckerData:
 
     def __init__(self, data_input):
         self.data_input = data_input
@@ -58,6 +54,12 @@ class CheckData:
 
     def time_control(self):
         if self.data_input in self.time_controler:
+            return True
+        else:
+            return False
+
+    def score(self):
+        if self.data_input in [str(1), str(2), str(3)]:
             return True
         else:
             return False

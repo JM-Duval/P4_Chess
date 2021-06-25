@@ -7,26 +7,32 @@ import os
 import sys
 
 sys.path[:0] = ['../']
-from model.menuModel import AllTournaments, StatisticsTournament, \
-    AllPlayers
-#from controler.tournamentControler import TournamentControler
-from view.menuView import *
+from controler.tournamentControler import run_tournament
+from controler.inputUserControler import UserInput
+from controler.dataBasePlayersControler import *
+from model.dataBaseTournamentModel import DataTournament, AllTournaments
+from model.dataBasePlayersModel import DataBasePlayers
+from view.menuView import DisplayMenu, DisplayMessage, DisplayList
 
 
-def statistics_menu_tournament(tournament_name):
+user_input = UserInput().interval
+
+def statistics_tournament_menu(tournament_name):
     run = True
     while run:
-        tournament = StatisticsTournament(tournament_name)
-        display_statistics_tournament_menu(tournament_name)
-        input = user_input(4)
+        tournament = DataTournament(tournament_name)
+        DisplayMenu().statistics_tournament(tournament_name)
+        input = user_input(5)
         if input == '1':
-            display_players(tournament.sorted_players_alpha())
+            DisplayList().infos_tour(tournament.get_infos_tour())
         if input == '2':
-            display_players(tournament.sorted_players_score())
+            DisplayList().players(tournament.get_sorted_players_alpha())
         if input == '3':
-            display_rounds(tournament.rounds())
+            DisplayList().players(tournament.get_sorted_players_score())
         if input == '4':
-            display_matchs(tournament.matchs())
+            DisplayList().rounds(tournament.get_rounds())
+        if input == '5':
+            DisplayList().matchs(tournament.get_matchs())
         if input.upper() == 'Q':
             run = False
 
@@ -34,107 +40,136 @@ def list_tournaments_menu():
     tournaments = AllTournaments().list()
     run = True
     while run:
-        display_list_tournaments(tournaments)
+        os.system('clear')
+        DisplayList().tournaments(tournaments)
         input = user_input(len(tournaments))
         try:
             tournaments_selected = tournaments[int(input)-1]
-            statistics_menu_tournament(tournaments_selected)
+            #DisplayMenu().statistics_tournament(tournaments_selected)
+            statistics_tournament_menu(tournaments_selected)
+
         except ValueError:
             run = False
+
 
 def statistics_menu():
     run = True
     while run:
-        display_statistics_menu()
+        DisplayMenu().statistics()
         input = user_input(3)
         if input == '1':
-            players_sorted_alpha = AllPlayers().sorted_alpha()
-            display_players(players_sorted_alpha)
+            players_sorted_alpha = DataBasePlayers().sorted_alpha()
+            DisplayList().players(players_sorted_alpha)
         if input == '2':
-            players_sorted_elo = AllPlayers().sorted_elo()
-            display_players(players_sorted_elo)
+            players_sorted_elo = DataBasePlayers().sorted_elo()
+            DisplayList().players(players_sorted_elo)
         if input == '3':
             list_tournaments_menu()
         if input.upper() == 'Q':
             run = False
 
-
-def restart_tournament_menu():
-    tournaments_open = AllTournaments().status_open()
-    #display_list_tournaments(tournaments_open)
+# -- Menu 3 --
+def statistics_players_menu():
     run = True
     while run:
-        display_list_tournaments(tournaments_open)
-        input = user_input(len(tournaments_open))
-        try:
-            tournaments_selected = tournaments_open[int(input)-1]
-            print(tournaments_selected)
-            TournamentControler(tournaments_selected)
-        except ValueError:
+        DisplayMenu().statistics_players()
+        input = user_input(4)
+        if input == '1':
+            players = DataBasePlayers().load()
+            DisplayList().players(players)
+        if input == '2':
+            infos_player = UserInput().infos_player()
+            enter_new_player(infos_player)
+        if input == '3':
+            edit_player()
+        if input == '4':
+            players = DataBasePlayers().load()
+            DisplayList().players(players)
+            input = user_input(len(players))
+            del_player(players[int(input)-1])
+        if input.upper() == 'Q':
             run = False
+
+
+class LaunchTournamentMenu:
+    def __init__(self):
+        pass
+
+    def go_start_new_tournament(self):
+        os.system('clear')
+        while True:
+            if self.select_players() == False:
+                break
+            else:
+                run_tournament(None, self.select_players())
+                break
+
+    def select_players(self):
+        selection = []
+        try:
+            while len(selection) < 8:
+                os.system('clear')
+                DisplayMessage().list_players()
+                players = DataBasePlayers().sorted_elo()
+                DisplayList().players(players)
+                input_user = user_input(len(players))
+                player_selected = players[int(input_user) - 1]
+                while player_selected in selection:
+                    DisplayMessage().player_error(player_selected)
+                    input_user = user_input(len(players))
+                    player_selected = players[int(input_user) - 1]
+
+                selection.append(player_selected)
+                DisplayMessage().selected_players()
+                DisplayList().players(selection)
+
+            return selection
+        except ValueError:
+            return False
+
+    def go_restart_tournament(self):
+        os.system('clear')
+        while True:
+            if self.select_tournament() != None:
+                run_tournament(self.select_tournament(), None)
+                break
+            else:
+                break
+
+    def select_tournament(self):
+        tournaments_open = AllTournaments().status_open()
+        print(tournaments_open)
+        if len(tournaments_open) == 0:
+            DisplayMessage().no_tournament()
+            return False
+        else:
+            run = True
+            while run:
+                DisplayList().tournaments(tournaments_open)
+                input = user_input(len(tournaments_open))
+                try:
+                    tournaments_selected = tournaments_open[int(input) - 1]
+                    return tournaments_selected
+                except ValueError:
+                    run = False
 
 
 def main_menu():
     while True:
-        display_main_menu()
+        DisplayMenu().main()
         input = user_input(4)
         if input == '1':
-            print('menu 1')
+            LaunchTournamentMenu().go_start_new_tournament()
         if input == '2':
-            restart_tournament_menu()
+            LaunchTournamentMenu().go_restart_tournament()
         if input == '3':
-            print('menu 3')
+            statistics_players_menu()
         if input == '4':
             statistics_menu()
         if input.upper() == 'Q':
             break
 
 
-def select_players():
-    players = AllPlayers().sorted_elo()
-    display_players(players)
-    display_title_select_players()
-    selection = []
-    while len(selection) < 8:
-        input_user = input("")
-        for player in selection:
-            while players[int(input_user)-1] == player:
-                display_selected_player_fail()
-                input_user = input("")
-        player_selected = players[int(input_user)-1]
-        print(player_selected)
-        selection.append(player_selected)
-    display_players(selection)
-
-#select_players()
 
 
 
-
-
-
-
-
-"""
-
-def list_all_tournaments():
-    tournaments = AllTournaments().list()
-    display_list_tournaments(tournaments)
-    return tournaments
-
-    try:
-        tournament_selected = int(user_input(nb_tournaments))
-        return tournaments[tournament_selected - 1]
-    except ValueError:
-        pass
-
-def list_tournaments_open_menu_test():
-    tournaments_open = AllTournaments().status_open()
-    display_list_tournaments(tournaments_open)
-    return tournaments_open
-    try:
-        tournament_selected = int(user_input(nb_tournaments))
-        return tournaments[tournament_selected - 1]
-    except ValueError:
-        pass
-"""

@@ -6,99 +6,52 @@ It is a first program with MVC structuring."""
 import datetime
 import sys
 sys.path[:0]=['../']
-from controler.checkerInputControler import CheckerData
-
-# ---------------------- Data tournament ---------------------------
-
-class InputTournament:
-    def __init__(self):
-        pass
-
-    def infos(self):
-        tournament_name = 'Word_tour_Tournament_13' #'Word_tour_Moto_GP' #enter_word('tournament_name')
-        location = 'France_Le_Mans' #enter_word('location')
-        tour_number = 0
-        time_control = '1' #input('Bullet / Blitz / Coup rapide :')
-        rounds = []
-        players = []
-        note = ()
-        return tournament_name, location, tour_number, time_control
-
-    def time_control(self, controler):
-        controler_input = input(f"{controler} : ")
-        check = CheckData(controler_input)
-        while check.time_control() == False:
-            controler_input = input(f"{controler} : ")
-            check = CheckData(controler_input)
-        return controler_input
 
 
-class InputPLayer:
-    def __init__(self):
-        pass
+def display_start_time(start_time):
+    print (f'Lancement du tournoi: {start_time}')
 
-    def infos(self):
-        first_name = enter_word('first name player')
-        last_name = enter_word('last name player')
-        year_of_birth = enter_year_of_birth()
-        sexe = enter_sexe()
-        elo = enter_number('elo')
-        return first_name, last_name, year_of_birth, sexe, elo
+def display_end_time(end_time):
+    print (f'Fin du tournoi: {end_time}')
 
-    def check_word(self, word):
-        word_input = input(f"{word} : ")
-        check = CheckData(word_input)
-        while check.word() == False:
-            print(
-                " Saisir un mot ou groupe de mots suivant les conditions ci dessous : \n"
-                " - Minimum 2 lettres \n"
-                " - Caractères autorisés: abcdefghijklmnopqrstuvwxyz_ \n"
-                " - Tout en minuscule"
-                " - '_' remplace les espaces")
-            word_input = input(f"{word} : ")
-            check = CheckData(word_input)
-        return word_input
+def display_game_sheet(matchs):
+    match_number=1
+    for i in matchs:
+        print (f'\n Match {match_number}:| {i.player1.first_name} \t|vs | {i.player2.first_name}\t|')
+        match_number +=1
 
-    def check_number(self, number):
-        nb = input(f"{number} : ")
-        check = CheckData(nb)
-        while check.number() == False:
-            print(" Saisir un nombre suivant les conditions ci dessous : \n"
-                  " - Pas d'espace \n"
-                  " - Caractères autorisés: 1234567890")
-            nb = input(f"{number} : ")
-            check = CheckData(nb)
-        return nb
+def display_opponents (player):
+    for opponent in player.opponents:
+        print (f'{player.first_name} a deja joue vs {opponent}')
 
-    def year_of_birth(self):
-        year_birt_min = int(datetime.datetime.today().strftime('%Y')) - 120
-        year_birt_max = int(datetime.datetime.today().strftime('%Y')) - 10
-        year_of_birth = input('year of birth (DD-MM-YYYY) :')
-        check_year_of_birth = CheckData(year_of_birth)
-        while check_year_of_birth.date() == False:
-            print(
-                f'Saisir une date de naissance suivant les conditions ci dessous : \n'
-                f' - Année comprise entre : {year_birt_min} & {year_birt_max} \n'
-                f' - Format : DD-MM-YYYY')
-
-            year_of_birth = input('year of birth :')
-            check_year_of_birth = CheckData(year_of_birth)
-        return year_of_birth
-
-    def sexe(self):
-        sexe = input("Man or Women :").lower()
-        check_sexe = CheckData(sexe)
-        while check_sexe.sexe() == False:
-            print("Saisir 'man' or 'women'")
-            sexe = input("Man or Women :")
-            check_sexe = CheckData(sexe)
-        return sexe
+def display_round(round_name):
+    print (f'\n*********  {round_name}  *********')
 
 
+def display_score(players):
+    players.sort(key=lambda x: x.elo)
+    players.sort(key=lambda x: x.score, reverse=True)
+    print (f'\n------  Score Player  ------')
+    for player in players:
+        print (f'| {player.first_name}  \t{player.id}\t{player.score}  |')
+
+def display_winner(tournament_name, player):
+    print(' // Tournoi termine // ')
+    print (f' Le vainqueur du tournoi "{tournament_name}" est : \n'
+           f'****************  {player}  ****************')
+
+def display_continue_tournament():
+    print(' |> Souhaitez vous continuer?')
+    print(' 1 - Oui')
+    print(' Q - Retour')
+
+
+
+
+"""
 # -------------------- Enter Score ---------------------
 def enter_score(player1, player2):
     winner = str(1)
-    """
     winner = input(f'\nQui a gagne? \n'
                    f'| {player1.first_name}  \t| : tapez 1 \n'
                    f'| {player2.first_name}  \t| : tapez 2 \n'
@@ -110,7 +63,6 @@ def enter_score(player1, player2):
                        f'| {player1.first_name}  \t| : tapez 1 \n'
                        f'| {player2.first_name}  \t| : tapez 2 \n'
                        f'| match nul \t| : tapez 3 \n')
-    """
     if winner == str(1):
         #print(f'{player1.first_name}: + 1 pt')
         return 1, 0
@@ -123,3 +75,4 @@ def enter_score(player1, player2):
         #print(f'{player1.first_name}\t: +0.5 pts\n'
         #      f'{player2.first_name}\t: +0.5 pts')
         return 0.5,0.5
+"""
