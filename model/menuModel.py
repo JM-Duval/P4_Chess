@@ -5,9 +5,8 @@ It is a first program with MVC structuring."""
 
 import os
 import sys
-sys.path[:0]=['../']
-from pathlib import Path
-from tinydb import TinyDB, Query, where
+sys.path[:0] = ['../']
+from tinydb import TinyDB, Query
 from model.dataBasePlayersModel import DataBasePlayers
 from model.dataBaseTournamentModel import DataTournament
 

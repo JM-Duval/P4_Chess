@@ -3,19 +3,18 @@
 """This file is a exercice about a program for help the chess tournament organization.
 It is a first program with MVC structuring."""
 
-import os
-import sys
-
-sys.path[:0] = ['../']
 from controler.tournamentControler import run_tournament
 from controler.inputUserControler import UserInput
-from controler.dataBasePlayersControler import *
+from controler.dataBasePlayersControler import enter_new_player, del_player, edit_player
 from model.dataBaseTournamentModel import DataTournament, AllTournaments
 from model.dataBasePlayersModel import DataBasePlayers
 from view.menuView import DisplayMenu, DisplayMessage, DisplayList
-
+import os
+import sys
+sys.path[:0] = ['../']
 
 user_input = UserInput().interval
+
 
 def statistics_tournament_menu(tournament_name):
     run = True
@@ -28,13 +27,14 @@ def statistics_tournament_menu(tournament_name):
         if input == '2':
             DisplayList().players(tournament.get_sorted_players_alpha())
         if input == '3':
-            DisplayList().players(tournament.get_sorted_players_score())
+            DisplayList().score_players(tournament.get_sorted_players_score())
         if input == '4':
             DisplayList().rounds(tournament.get_rounds())
         if input == '5':
             DisplayList().matchs(tournament.get_matchs())
         if input.upper() == 'Q':
             run = False
+
 
 def list_tournaments_menu():
     tournaments = AllTournaments().list()
@@ -45,9 +45,8 @@ def list_tournaments_menu():
         input = user_input(len(tournaments))
         try:
             tournaments_selected = tournaments[int(input)-1]
-            #DisplayMenu().statistics_tournament(tournaments_selected)
             statistics_tournament_menu(tournaments_selected)
-
+            break
         except ValueError:
             run = False
 
@@ -68,7 +67,7 @@ def statistics_menu():
         if input.upper() == 'Q':
             run = False
 
-# -- Menu 3 --
+
 def statistics_players_menu():
     run = True
     while run:
@@ -98,10 +97,11 @@ class LaunchTournamentMenu:
     def go_start_new_tournament(self):
         os.system('clear')
         while True:
-            if self.select_players() == False:
+            players_for_tour = self.select_players()
+            if players_for_tour is False:
                 break
             else:
-                run_tournament(None, self.select_players())
+                run_tournament(None, players_for_tour)
                 break
 
     def select_players(self):
@@ -118,40 +118,36 @@ class LaunchTournamentMenu:
                     DisplayMessage().player_error(player_selected)
                     input_user = user_input(len(players))
                     player_selected = players[int(input_user) - 1]
-
                 selection.append(player_selected)
                 DisplayMessage().selected_players()
                 DisplayList().players(selection)
-
             return selection
         except ValueError:
             return False
 
     def go_restart_tournament(self):
         os.system('clear')
+        tournament = self.select_tournament()
         while True:
-            if self.select_tournament() != None:
-                run_tournament(self.select_tournament(), None)
+            if tournament is False:
                 break
             else:
+                run_tournament(tournament, None)
                 break
 
     def select_tournament(self):
         tournaments_open = AllTournaments().status_open()
-        print(tournaments_open)
-        if len(tournaments_open) == 0:
-            DisplayMessage().no_tournament()
-            return False
-        else:
-            run = True
-            while run:
+        try:
+            if len(tournaments_open) == 0:
+                DisplayMessage().no_tournament()
+                return False
+            else:
                 DisplayList().tournaments(tournaments_open)
                 input = user_input(len(tournaments_open))
-                try:
-                    tournaments_selected = tournaments_open[int(input) - 1]
-                    return tournaments_selected
-                except ValueError:
-                    run = False
+                tournaments_selected = tournaments_open[int(input) - 1]
+                return tournaments_selected
+        except ValueError:
+            return False
 
 
 def main_menu():

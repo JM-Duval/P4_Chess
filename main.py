@@ -1,11 +1,11 @@
 # -*-coding: utf-8 -*
-#! /usr/bin/env python
+# !/usr/bin/env python
 """This file is a exercice about a program for help the chess tournament organization.
 It is a first program with MVC structuring."""
 
 import sys
-sys.path[:0]=['../']
-from controler.menuControler import *
+sys.path[:0] = ['../']
+from controler.menuControler import main_menu
 from model.player import Player
 
 
@@ -35,35 +35,3 @@ players = [player_Rins, player_Martin, player_Mir, player_Rossi, player_Miller, 
 
 if __name__ == "__main__":
     main_menu()
-
-
-
-def test():
-    selection = []
-    try:
-        while len(selection) < 8:
-            os.system('clear')
-            print('\n Liste des joueurs:')
-            display(players)
-            user_input = input (' : ')
-            while players[int(user_input) - 1] in selection:
-                print(f'{players[int(user_input) - 1]} est deja inscrit. Essai a nouveau:')
-                user_input = input(' : ')
-            player_selected = players[int(user_input) - 1]
-            selection.append(player_selected)
-            print('Liste des joueurs selectionnees:')
-            display(selection)
-
-
-    except ValueError:
-        pass
-
-
-def display(players):
-    x = 1
-    print()
-    for player in players:
-        print(f'{x} - {player}')
-        x += 1
-
-#test()

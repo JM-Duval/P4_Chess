@@ -1,21 +1,21 @@
 # -*-coding: utf-8 -*
-#! /usr/bin/env python
+# ! /usr/bin/env python
 """This file is a exercice about a program for help the chess tournament organization.
 It is a first program with MVC structuring."""
 
+from model.match import Match
 import time
 import sys
-sys.path[:0]=['../']
-from model.match import Match
+sys.path[:0] = ['../']
 
 
 class Round:
 
     def __init__(self, round_name):
-         self.round_name = round_name
-         self.matchs = []
-         self.start_time = self.start_time
-         self.end_time = self.end_time
+        self.round_name = round_name
+        self.matchs = []
+        self.start_time = self.start_time
+        self.end_time = self.end_time
 
     def start_time(self):
         time_now = time.strftime("%a %d %B %Hh%M, Paris")
@@ -32,5 +32,5 @@ class Round:
         return out
 
     def add_match(self, player1, player2):
-        match = Match(player1,player2)
+        match = Match(player1, player2)
         self.matchs.append(match)

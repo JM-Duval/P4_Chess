@@ -1,11 +1,11 @@
 # -*-coding: utf-8 -*
-#! /usr/bin/env python
+# ! /usr/bin/env python
 """This file is a exercice about a program for help the chess tournament organization.
 It is a first program with MVC structuring."""
 
 import os
 import sys
-sys.path[:0]=['../']
+sys.path[:0] = ['../']
 
 
 class DisplayMenu:
@@ -27,8 +27,8 @@ class DisplayMenu:
         print()
         print(" * Rapports & Statistiques *")
         print()
-        print(" 1 - Classement general des joueurs par ordre alphabetique")
-        print(" 2 - Classement general des joueurs par score")
+        print(" 1 - Classement des joueurs par ordre alphabetique")
+        print(" 2 - Classement general")
         print(" 3 - Liste des tournois")
         print(" Q - Retour au menu precedent")
         os.system('clear')
@@ -47,7 +47,7 @@ class DisplayMenu:
 
     def statistics_players(self):
         print()
-        print(f" * Base de donnees joueurs *")
+        print(" * Base de donnees joueurs *")
         print()
         print(" 1 - Afficher les joueurs")
         print(" 2 - Enregistrer un nouveau joueur ")
@@ -67,7 +67,7 @@ class DisplayList:
         print()
         for i in range(len(tournaments)):
             print(f" {i+1} - {tournaments[i]}")
-        print (" Q - Retour au menu precedent")
+        print(" Q - Retour au menu precedent")
         return len(tournaments)
 
     def rounds(self, rounds):
@@ -81,10 +81,17 @@ class DisplayList:
             print(f'{match}')
 
     def players(self, players):
-        x=1
+        x = 1
         for player in players:
             print(
                 f"  {x}  - {player.first_name} {player.last_name}\t elo - {player.elo}")
+            x += 1
+
+    def score_players(self, players):
+        x = 1
+        for player in players:
+            print(
+                f"  {x}  - {player.first_name} {player.last_name}\t score - {player.score}")
             x += 1
 
     def player(self, player):
@@ -98,10 +105,9 @@ class DisplayList:
         print(f'- Date de fin : {end_time}')
         print(f'- Nombre de rounds joue : {tour_number}')
         print(f'- Statut : {status}')
-        print(f'- Joueurs:')
-        self.players(players)
+        print('- Joueurs:')
+        self.score_players(players)
         input('')
-
 
 
 class DisplayMessage:
@@ -115,7 +121,7 @@ class DisplayMessage:
         print('Liste des joueurs:')
 
     def select_tournament(self):
-        print(f' |> Selectionner un tournoi ci dessous : ')
+        print(' |> Selectionner un tournoi ci dessous : ')
 
     def no_tournament(self):
         print('Tous les tournois sont termines.')
@@ -129,26 +135,6 @@ class DisplayMessage:
     def player_error(self, player):
         print(f' {player} est deja inscrit.')
 
-
-
-
-
-
-
-"""
-
-def display_tournaments(tournaments):
-    for tournament_name in tournaments:
-        print(tournament_name)
-
-def display_select_tournament(tournaments):
-    x = 1
-    for tournament_name in tournaments:
-        print(f'{tournament_name} enter {x}')
-        x+=1
-    select_tournament = int(input(' >>> '))
-    return select_tournament
-"""
 
 def display_continue():
     print(' |> Souhaitez vous continuer?')

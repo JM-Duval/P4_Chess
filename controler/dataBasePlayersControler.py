@@ -3,13 +3,14 @@
 """This file is a exercice about tinydb.
 Web_site_link = https://www.docstring.fr/blog/tinydb-une-base-de-donnees-adaptee-vos-projets/"""
 
-import os
 import sys
+
 sys.path[:0]=['../']
 from model.dataBasePlayersModel import DataBasePlayers
-from view.dataBasePlayersView import *
-
+from view.dataBasePlayersView import display_player_exist, display_player_saved, \
+    display_player_delete, display_players
 from model.player import Player
+
 player1 = ('annie', 'cordy', '16/06/1928', 'women', 8)  #9
 player2 = ('Eric', 'Zemmour', '31/08/1958', 'm', 3) #4
 player3 = ('Jennifer', 'Lopez', '24/07/1969', 'w' , 4) #6
@@ -30,29 +31,34 @@ player_Miller = ('Jack', 'Miller', '26', 'Man', 6)
 player_Marquez = ('Marc', 'Marquez', '28', 'Man', 15)
 player_Zarco = ('Johan', 'Zarco', '30', 'Man', 5)
 player_Morbidelli = ('Franco', 'Morbidelli', '26', 'Man', 8)
-players = [player_Rins, player_Martin, player_Mir, player_Rossi, player_Miller, player_Marquez, player_Zarco, player_Morbidelli,
+players = [player_Rins, player_Martin, player_Mir, player_Rossi, player_Miller,
+           player_Marquez, player_Zarco, player_Morbidelli,
            player1,player2,player3,player4,player5,player6,player7,player8]
-
 
 def enter_new_player(infos_player):
     first_name, last_name, date_birth, sexe, elo = infos_player
     new_player = Player(first_name, last_name, date_birth, sexe, elo)
-    if DataBasePlayers().search(new_player) == True:
+    if DataBasePlayers().search(new_player) is True:
         display_player_exist(new_player)
     else:
         DataBasePlayers().insert(new_player)
-        if DataBasePlayers().search(new_player) == True:
+        if DataBasePlayers().search(new_player) is True:
             display_player_saved(new_player)
+
 
 def del_player(player):
     DataBasePlayers().remove(player)
-    if DataBasePlayers().search(player) == False:
+    if DataBasePlayers().search(player) is True:
+        print('probleme')
+    else:
         display_player_delete(player)
         display_players(DataBasePlayers().load())
-    else:
-        print('probleme')
+
+def edit_player():
+    print('Fonction non disponible pour le moment')
 
 
+"""
 class DataPlayers:
     def __init__(self):
         pass
@@ -82,15 +88,11 @@ class DataPlayers:
 
     def sorted_alpha(self):
         sorted_players = DataBasePlayers().sorted_alpha()
-
+        display_players(sorted_players)
+        return sorted_players
 
     def sorted_elo(self):
         sorted_players = DataBasePlayers().sorted_elo()
         display_players(sorted_players)
         return sorted_players
-
-    def del_player():
-        pass
-
-
-    #edit_player()
+"""

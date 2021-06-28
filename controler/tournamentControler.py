@@ -1,27 +1,27 @@
 # -*-coding: utf-8 -*
-#!  /usr/bin/env python
+# !/usr/bin/env python
 """This file is a exercice about a program for help the chess tournament organization.
 It is a first program with MVC structuring."""
 
 from math import floor
 import datetime
 import sys
-sys.path[:0]=['../']
+sys.path[:0] = ['../']
 from model.tournament import Tournament
 from model.round import Round
-from model.match import Match
-from model.player import Player
-from model.dataBaseTournamentModel import DataTournament #, DataTournamentPlayers
-from model.inputUserModel import CheckerData
+from model.dataBaseTournamentModel import DataTournament
 from controler.inputUserControler import UserInput
-from view.menuView import *
-from view.tournamentView import *
+from view.menuView import DisplayMenu, DisplayList, DisplayMessage, \
+    display_continue
+from view.tournamentView import display_start_time, display_end_time, \
+    display_game_sheet, display_opponents, display_round, display_score, \
+    display_winner, display_continue_tournament
 from view.inputUserView import display_back
 
-def run_tournament(tournament_name = None, players = None):
+def run_tournament (tournament_name=None, players=None):
     run = True
     while run:
-        if tournament_name == None:
+        if tournament_name is None:
             players = players
             tournament_name, location, tour_number, time_control = UserInput().infos_tournament()
             start_time = None
@@ -33,7 +33,6 @@ def run_tournament(tournament_name = None, players = None):
             tour = TournamentControler(tournament, players)
             tour.start_tournament()
 
-
         else:
             tournament = DataTournament(tournament_name).load_tournament()
             players = tournament.players
@@ -41,7 +40,7 @@ def run_tournament(tournament_name = None, players = None):
 
         tour.run_round()
 
-        if tournament.status =='closed':
+        if tournament.status == 'closed':
             display_back()
             input('')
             break
@@ -50,10 +49,8 @@ def run_tournament(tournament_name = None, players = None):
             user_input = UserInput().interval(1)
             if user_input.upper() == 'Q':
                 run = False
-                print('stop')
             else:
                 continue
-
 
 
 class TournamentControler:
@@ -62,6 +59,8 @@ class TournamentControler:
         self.tournament = tournament
         self.tournament.players = players
         self.tournament_name = tournament.tournament_name
+        self.start_time = tournament.start_time
+        self.end_time = tournament.end_time
         self.nb_match = floor((len(self.tournament.players) / 2))
 
     def start_tournament(self):
@@ -71,10 +70,10 @@ class TournamentControler:
         display_start_time(self.start_time)
 
     def close_tournament(self):
-        self.tournament.end_time = datetime.datetime.today().strftime('%d-%m-%y at %H:%M')
+        self.end_time = datetime.datetime.today().strftime('%d-%m-%y at %H:%M')
         self.tournament.status = 'closed'
         self.save_tournament()
-        display_end_time(self.tournament.end_time)
+        display_end_time(self.end_time)
 
     def save_tournament(self):
         if DataTournament().exist(self.tournament_name):
@@ -86,17 +85,19 @@ class TournamentControler:
                 self.tournament_name, self.tournament.rounds)
             DataTournament(self.tournament_name).update_status(
                 self.tournament_name, self.tournament.status)
+            DataTournament(self.tournament_name).update_start_time(
+                self.tournament_name, self.start_time)
+            DataTournament(self.tournament_name).update_end_time(
+                self.tournament_name, self.end_time)
             print('*********** Partie Sauvegardee ***********')
         else:
             DataTournament(self.tournament_name).save_tournament(self.tournament)
             print('*********** Nouvelle partie enregistree  ***********')
 
-
-    # -- Rounds  ---------------------------------------
-    def run_round(self):
+    def run_round (self):
         # update tour number
         self.tournament.tour_number += 1
-        if self.tournament.tour_number <= 4 :
+        if self.tournament.tour_number <= 4:
 
             # sorted players
             self.sorted_players(self.tournament.tour_number)
@@ -116,11 +117,11 @@ class TournamentControler:
                 match.player1.add_opponent(match.player2.id)
                 match.player2.add_opponent(match.player1.id)
 
+
             display_round(round_name)
             display_game_sheet(roundx.matchs)
-
             # update score player
-            for i in range (self.nb_match):
+            for i in range(self.nb_match):
                 self._handle_score(roundx.matchs[i].player1,
                                    roundx.matchs[i].player2)
 
@@ -155,7 +156,7 @@ class TournamentControler:
             x = 0
             i = x
             opponent_in_list = True
-            while opponent_in_list:
+            while opponent_in_list is True:
                 try:
                     i += 1
                     if players_sorted[i].id in players_sorted[x].opponents:
@@ -174,108 +175,6 @@ class TournamentControler:
         return opponent_list_checked
 
     def _handle_score(self, player1, player2):
-        result_score = UserInput().score(player1,player2)
+        result_score = UserInput().score(player1, player2)
         player1.score += result_score[0]
         player2.score += result_score[1]
-
-
-
-
-
-
-
-
-
-
-"""
-        if tournament == None:
-            tournament_name, location, start_time, tour_number, \
-            time_control = self.new_tournament()
-            self.tournament_name = tournament_name
-            #self.start_time = datetime.datetime.today().strftime('%d-%m-%y at %H:%M')
-            self.start_time = None
-            self.tour_number = tour_number
-            self.tournament = Tournament(tournament_name,
-                                         location,
-                                         start_time,
-                                         tour_number,
-                                         time_control)
-            self.tournament.players = players
-
-        else:
-            tournament_name, location, start_time, end_time, tour_number, \
-            time_control, players, rounds, description, status \
-                =self.restart_tournament(tournament)
-            self.tournament_name = tournament_name
-            self.tour_number = tour_number
-            self.tournament = Tournament(tournament_name,
-                                         location,
-                                         start_time,
-                                         tour_number,
-                                         time_control,
-                                         status)
-            self.tournament.players = players
-            self.tournament.rounds = rounds
-
-        self.nb_match = floor((len(self.tournament.players) / 2))
-
-    def new_tournament(self):
-        tournament_name, location, tour_number, time_control = data_input_tournament()
-        start_time = None
-        return tournament_name, location, start_time, tour_number, time_control
-
-    def restart_tournament(self, tournament):
-        tournament_name = tournament.tournament_name
-        location = tournament.location
-        start_time = tournament.start_time
-        end_time = tournament.end_time
-        tour_number = tournament.tour_number
-        time_control = tournament.time_control
-        players = tournament.players
-        rounds = tournament.rounds
-        description = tournament.description
-        status = tournament.status
-        return tournament_name, location, start_time, end_time, tour_number,\
-               time_control, players, rounds, description, status
-
-
-
-def run_restart_tournament(tournament_name):
-    tournament = DataTournament(tournament_name).load_tournament()
-    players = tournament.players
-    return players, tournament
-
-def run_new_tournament():
-    tournament_name, location, tour_number, time_control = UserInput().infos_tournament()
-    start_time = None
-    tournament = Tournament(tournament_name,
-                            location,
-                            start_time,
-                            tour_number,
-                            time_control)
-    return tournament
-
-def select_players():
-    players = AllPlayers().sorted_elo()
-    display_players(players)
-    display_title_select_players()
-    selection = []
-    #input_user = user_input(len(players))
-    try:
-
-        while len(selection) < 8:
-            input_user = user_input(len(players))
-            for player in selection:
-                while players[int(input_user)-1] == player:
-                    display_selected_player_fail()
-                    input_user = input("")
-            player_selected = players[int(input_user)-1]
-            print(player_selected)
-            selection.append(player_selected)
-            display_players(selection)
-    except ValueError:
-        selection = None
-
-    return selection
-
-"""

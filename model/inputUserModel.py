@@ -1,5 +1,5 @@
 # -*-coding: utf-8 -*
-#! /usr/bin/env python
+# ! /usr/bin/env python
 """This file is a exercice about a program for help the chess tournament organization.
 It is a first program with MVC structuring."""
 
@@ -15,7 +15,7 @@ class CheckerData:
         self.year_birt_min = int(datetime.datetime.today().strftime('%Y')) - 120
         self.year_birt_max = int(datetime.datetime.today().strftime('%Y')) - 10
         self.list_sexe = {'man', 'women'}
-        self.time_controler = {'1', '2', '3'} # bullet // blitz // coup rapide
+        self.time_controler = {'1', '2', '3'}  # bullet // blitz // coup rapide
 
     def word(self):
         if len(self.data_input) < 2:
@@ -27,7 +27,7 @@ class CheckerData:
             else:
                 return False
 
-    def number (self):
+    def number(self):
         for i in self.data_input:
             if i in self.numbers:
                 continue
@@ -46,7 +46,7 @@ class CheckerData:
         else:
             return False
 
-    def sexe (self):
+    def sexe(self):
         if self.data_input in self.list_sexe:
             return True
         else:

@@ -6,11 +6,13 @@ It is a first program with MVC structuring."""
 
 import datetime
 import sys
-#sys.setrecursionlimit(15000)
 sys.path[:0]=['../']
-
-from view.inputUserView import *
 from model.inputUserModel import CheckerData
+from view.inputUserView import enter,display_error_word_message, \
+    display_error_number_message, display_error_year_of_birth_message,\
+    display_error_sexe_message,display_time_control_selection, \
+    display_question_winner, display_error_message, display_winner, \
+    display_winners, display_interval, display_back
 
 
 class UserInput:
@@ -18,13 +20,10 @@ class UserInput:
         pass
 
     def infos_tournament(self):
-        tournament_name = 'Tournoi gp'#self.word('tournament_name') #'Word_tour_Tournament_13' #'Word_tour_Moto_GP'
+        tournament_name = self.word('tournament_name')
         location = 'France_Le_Mans' #self.check_word('location')
         tour_number = 0
-        time_control = '2'#self.time_control()
-        rounds = []
-        players = []
-        note = ()
+        time_control = self.time_control()
         return tournament_name, location, tour_number, time_control
 
     def infos_player(self):
@@ -39,7 +38,7 @@ class UserInput:
     def word(self, word):
         user_input = enter(word)
         check_word = CheckerData(user_input).word()
-        while check_word == False:
+        while check_word is False:
             display_error_word_message()
             user_input = enter(word)
             check_word = CheckerData(user_input).word()
@@ -48,7 +47,7 @@ class UserInput:
     def number(self, number):
         user_input = enter(number)
         check_number = CheckerData(user_input).number()
-        while check_number == False:
+        while check_number is False:
             display_error_number_message()
             user_input = enter(number)
             check_number = CheckerData(user_input).number()
@@ -78,7 +77,7 @@ class UserInput:
         display_time_control_selection()
         user_input = enter()
         check_time_control = CheckerData(user_input).time_control()
-        while check_time_control == False:
+        while check_time_control is False:
             display_error_message()
             display_time_control_selection()
             user_input = input()
@@ -89,7 +88,7 @@ class UserInput:
         display_question_winner(player1, player2)
         user_input = enter()
         check_score = CheckerData(user_input).score()
-        while check_score == False:
+        while check_score is False:
             display_error_message()
             display_question_winner(player1, player2)
             user_input = enter()
@@ -112,7 +111,7 @@ class UserInput:
             display_interval(number_max)
             user_input = enter()
             try:
-                if  0 < int(user_input) <= number_max:
+                if 0 < int(user_input) <= number_max:
                     break
             except ValueError:
                 if user_input.upper() == 'Q':

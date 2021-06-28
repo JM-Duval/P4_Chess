@@ -1,11 +1,12 @@
 # -*-coding: utf-8 -*
-#! /usr/bin/env python
+# ! /usr/bin/env python
 """This file is a exercice about a program for help the chess tournament organization.
 It is a first program with MVC structuring."""
 
+
 class Player:
 
-    def __init__(self, first_name, last_name, date_birth, sexe, elo, score = 0):
+    def __init__(self, first_name, last_name, date_birth, sexe, elo, score=0):
         self.first_name = first_name
         self.last_name = last_name
         self.date_birth = date_birth
@@ -14,7 +15,6 @@ class Player:
         self.score = score
         self.id = self.create_id()
         self.opponents = []
-
 
     def create_id(self):
         return str('@') + str(self.first_name)[:3].lower() + str(self.elo)

@@ -1,7 +1,8 @@
 # -*-coding: utf-8 -*
-#! /usr/bin/env python
+# ! /usr/bin/env python
 """This file is a exercice about a program f    or help the chess tournament organization.
 It is a first program with MVC structuring."""
+
 
 class Match:
 
@@ -27,12 +28,12 @@ class Match:
         match.append(self.info_player(self.player2, self.score_player2))
         return match
 
-    def sav_match(self, player1, player2, score_player1, score_player2):
+    def sav_match(self, score_player1, score_player2):
         list_player1 = []
         list_player2 = []
-        list_player1.append(player1)
+        list_player1.append(self.player1)
         list_player1.append(score_player1)
-        list_player2.append(player2)
+        list_player2.append(self.player2)
         list_player2.append(score_player2)
-        match_played = (list_player1,list_player2)
+        match_played = (list_player1, list_player2)
         return match_played

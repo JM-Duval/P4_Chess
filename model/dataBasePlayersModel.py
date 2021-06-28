@@ -3,15 +3,11 @@
 """This file is a exercice about tinydb.
 Web_site_link = https://www.docstring.fr/blog/tinydb-une-base-de-donnees-adaptee-vos-projets/"""
 
-from tinydb import TinyDB, Query, where
-# TinyDB is the database
-# Query allows to query the data base
-# where allows to refine the search
+from model.player import Player
+from tinydb import TinyDB, Query
 import os
 import sys
-sys.path[:0]=['../']
-from pathlib import Path
-from model.player import Player
+sys.path[:0] = ['../']
 
 
 class DataBasePlayers:
@@ -25,23 +21,26 @@ class DataBasePlayers:
 
     def search(self, player):
         Person = Query()
-        if (self.players_table.search(Person.last_name == player.last_name) and self.players_table.search(Person.first_name == player.first_name) and self.players_table.search(Person.date_birth == player.date_birth)):
+        if (self.players_table.search(Person.last_name == player.last_name) and
+            self.players_table.search(Person.first_name == player.first_name) and
+            self.players_table.search(Person.date_birth == player.date_birth)):
             return True
         else:
             return False
 
     def _serialized(self, player):
         serialized_player = {
-        'first_name' : player.first_name,
-        'last_name' : player.last_name,
-        'date_birth' : player.date_birth,
-        'sexe' : player.sexe,
-        'elo' : player.elo,
+            'first_name': player.first_name,
+            'last_name': player.last_name,
+            'date_birth': player.date_birth,
+            'sexe': player.sexe,
+            'elo': player.elo,
         }
         return serialized_player
 
     def _deserialized(self, serialized_players):
         players = []
+
         def _deserialized_step(serialized_player):
             first_name = serialized_player['first_name']
             last_name = serialized_player['last_name']
@@ -56,9 +55,8 @@ class DataBasePlayers:
             _deserialized_step(serialized_player)
         return players
 
-
     def insert(self, player):
-        if self.search(player) == True:
+        if self.search(player) is True:
             return False
         else:
             print(self.players_table.insert(self._serialized(player)))
@@ -76,10 +74,10 @@ class DataBasePlayers:
         if self.search(player):
             Person = Query()
             self.players_table.update({arg: new_value}, Person.last_name == player)
-            print (f'{player} a maintenant {new_value}')
+            print(f'{player} a maintenant {new_value}')
             self.display()
         else:
-            print (f"{player} n'existe pas dans la liste" )
+            print(f"{player} n'existe pas dans la liste" )
 
     def display(self):
         for i in self.load():
@@ -88,7 +86,7 @@ class DataBasePlayers:
     def get(self, *args):
         for i in self.load():
             for arg in args:
-                print (i.__dict__[arg])
+                print(i.__dict__[arg])
 
     def sorted_alpha(self):
         return sorted(self.load(), key=lambda x: x.last_name)

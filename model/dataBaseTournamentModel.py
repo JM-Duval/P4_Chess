@@ -1,75 +1,69 @@
 # -*-coding: utf-8 -*
-#! /usr/bin/env python
+# !/usr/bin/env python
 """This file is a exercice about tinydb.
 Web_site_link = https://www.docstring.fr/blog/tinydb-une-base-de-donnees-adaptee-vos-projets/"""
 
-from tinydb import TinyDB, Query, where
-import sys
-sys.path[:0]=['../']
-import os
+from tinydb import TinyDB, Query
 from model.tournament import Tournament
 from model.round import Round
-from model.match import Match
 from model.player import Player
-
-# TinyDB is the database
-# Query allows to query the data base
-# where allows to refine the search
+import os
+import sys
+sys.path[:0] = ['../']
 
 
 class DataTournament:
 
-    def __init__(self, tournament_name = None):
+    def __init__(self, tournament_name=None):
         self.tournament_name = tournament_name
         self.name_table = 'tournament'
         self.name_file = 'tournaments.json'
-        origin_path = (sys.path[(len(sys.path)) -2][:-4])
+        origin_path = (sys.path[(len(sys.path)) -2][ : -4])
         path_data_tournament = os.path.join(origin_path, 'data/tournaments')
-        db = TinyDB(os.path.join(path_data_tournament,self.name_file))
+        db = TinyDB(os.path.join(path_data_tournament, self.name_file))
         self.tournament_table = db.table(self.name_table)
-
 
     def serialized_tournament(self, tournament):
         serialized_tournament = {
-        'tournament_name': tournament.tournament_name,
-        'start_time': tournament.start_time,
-        'tour_number': tournament.tour_number,
-        'location': tournament.location,
-        'time_control': tournament.time_control,
-        'status': tournament.status,
-        'end_time' : tournament.end_time,
-        'players' : [self._serialized_player(player) for player in tournament.players],
-        'rounds' : [self._serialized_round(round, round.round_name) for round in tournament.rounds]
-
+            'tournament_name': tournament.tournament_name,
+            'start_time': tournament.start_time,
+            'tour_number': tournament.tour_number,
+            'location': tournament.location,
+            'time_control': tournament.time_control,
+            'status': tournament.status,
+            'end_time': tournament.end_time,
+            'players': [self._serialized_player(player)
+                        for player in tournament.players],
+            'rounds': [self._serialized_round(round, round.round_name)
+                       for round in tournament.rounds]
         }
         return serialized_tournament
 
     def _serialized_round(self, round, round_name):
         serialized_round = {
-            round_name : [self._serialized_match(match) for match in round.matchs]
+            round_name: [self._serialized_match(match) for match in round.matchs]
         }
         return serialized_round
 
     def _serialized_match(self, match):
         serialized_match = {
-            'match' : (self._serialized_player(match.player1),
+            'match': (self._serialized_player(match.player1),
                       self._serialized_player(match.player2))
         }
         return serialized_match
 
     def _serialized_player(self, player):
         serialized_player = {
-        'first_name' : player.first_name,
-        'last_name' : player.last_name,
-        'date_birth' : player.date_birth,
-        'sexe' : player.sexe,
-        'elo' : player.elo,
-        'id' : player.id,
-        'score' : player.score,
-        'opponents' : player.opponents
+            'first_name': player.first_name,
+            'last_name': player.last_name,
+            'date_birth': player.date_birth,
+            'sexe': player.sexe,
+            'elo': player.elo,
+            'id': player.id,
+            'score': player.score,
+            'opponents': player.opponents
         }
         return serialized_player
-
 
     def _deserialized_tournament(self, serialized_tournament):
         tournament_name = serialized_tournament['tournament_name']
@@ -92,7 +86,6 @@ class DataTournament:
         tournament.players = players
         tournament.rounds = rounds
         return tournament
-
 
     def _deserialized_round(self, serialized_round):
         for round_name, match in serialized_round.items():
@@ -120,8 +113,6 @@ class DataTournament:
         player.opponents = opponents
         return player
 
-#--------------------------------------------------------------------------------
-
     def save_tournament(self, tournament):
         self.tournament_table.insert(self.serialized_tournament(tournament))
 
@@ -133,26 +124,41 @@ class DataTournament:
 
     def update_data_players(self, tournament_name, players):
         Tour = Query()
-        self.tournament_table.upsert({'tournament_name': tournament_name, 'players': [self._serialized_player(player) for player in players]}, Tour.tournament_name == tournament_name)
+        self.tournament_table.upsert({'tournament_name': tournament_name,
+                                      'players': [self._serialized_player(player)
+                                                  for player in players]},
+                                     Tour.tournament_name == tournament_name)
 
     def update_rounds(self, tournament_name, rounds):
         Tour = Query()
         self.tournament_table.upsert({'tournament_name': tournament_name,
                                       'rounds': [
-                                          self._serialized_round(round, round.round_name) for
-                                          round in rounds]},
-                                      Tour.tournament_name == tournament_name)
+                                          self._serialized_round(
+                                              round, round.round_name) for
+                                          round in rounds]}, Tour.tournament_name == tournament_name)
 
     def update_tour_number(self, tournament_name, tour_number):
         Tour = Query()
         self.tournament_table.upsert({'tournament_name': tournament_name,
-                                      'tour_number': tour_number },
+                                      'tour_number': tour_number},
                                      Tour.tournament_name == tournament_name)
 
     def update_status(self, tournament_name, status):
         Tour = Query()
         self.tournament_table.upsert({'tournament_name': tournament_name,
-                                      'status': status },
+                                      'status': status},
+                                     Tour.tournament_name == tournament_name)
+
+    def update_start_time(self, tournament_name, start_time):
+        Tour = Query()
+        self.tournament_table.upsert({'tournament_name': tournament_name,
+                                      'start_time': start_time},
+                                     Tour.tournament_name == tournament_name)
+
+    def update_end_time(self, tournament_name, end_time):
+        Tour = Query()
+        self.tournament_table.upsert({'tournament_name': tournament_name,
+                                      'end_time': end_time},
                                      Tour.tournament_name == tournament_name)
 
     def exist(self, tournament_name):
@@ -165,12 +171,6 @@ class DataTournament:
     def insert(self, new_tournament):
         self.tournament_table.insert(self.serialized_tournament(new_tournament))
 
-    def get_sorted_players_alpha(self):
-        return sorted(self.load_tournament().players, key=lambda x: x.last_name)
-
-    def get_sorted_players_score(self):
-        return sorted(self.load_tournament().players, key=lambda x: x.score, reverse=True)
-
     def get_rounds(self):
         return [self.load_tournament().rounds[i].round_name
                 for i in range(len(self.load_tournament().rounds))]
@@ -181,12 +181,17 @@ class DataTournament:
             [matchs.append(players) for players in round.matchs]
         return matchs
 
-    def get_infos_tour (self):
+    def get_infos_tour(self):
         tour = self.load_tournament()
         return tour.tournament_name, tour.location, tour.start_time, \
-               tour.end_time, tour.tour_number, tour.status, tour.players
+               tour.end_time, tour.tour_number, tour.status, \
+               self.get_sorted_players_score()
 
+    def get_sorted_players_alpha(self):
+        return sorted(self.load_tournament().players, key=lambda x: x.last_name)
 
+    def get_sorted_players_score(self):
+        return sorted(self.load_tournament().players, key=lambda x: x.score, reverse=True)
 
 
 class AllTournaments:
@@ -217,4 +222,3 @@ class AllTournaments:
             if tour['status'] == 'close':
                 list_tournaments_closed.append(tour)
         return list_tournaments_closed
-
