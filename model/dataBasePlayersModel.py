@@ -1,5 +1,5 @@
 # -*-coding: utf-8 -*
-#! /usr/bin/env python
+# ! /usr/bin/env python
 """This file is a exercice about tinydb.
 Web_site_link = https://www.docstring.fr/blog/tinydb-une-base-de-donnees-adaptee-vos-projets/"""
 
@@ -21,9 +21,10 @@ class DataBasePlayers:
 
     def search(self, player):
         Person = Query()
-        if (self.players_table.search(Person.last_name == player.last_name) and
-            self.players_table.search(Person.first_name == player.first_name) and
-            self.players_table.search(Person.date_birth == player.date_birth)):
+        if (self.players_table.search(
+            Person.last_name == player.last_name) and self.players_table.search(
+            Person.first_name == player.first_name) and self.players_table.search(
+            Person.date_birth == player.date_birth)):
             return True
         else:
             return False
@@ -77,7 +78,7 @@ class DataBasePlayers:
             print(f'{player} a maintenant {new_value}')
             self.display()
         else:
-            print(f"{player} n'existe pas dans la liste" )
+            print(f"{player} n'existe pas dans la liste")
 
     def display(self):
         for i in self.load():

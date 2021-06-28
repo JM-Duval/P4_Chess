@@ -16,10 +16,10 @@ def display_end_time(end_time):
 
 
 def display_game_sheet(matchs):
-    match_number=1
+    match_number = 1
     for i in matchs:
         print(f'\n Match {match_number}:| {i.player1.first_name} \t|vs | {i.player2.first_name}\t|')
-        match_number +=1
+        match_number += 1
 
 
 def display_opponents(player):
@@ -34,7 +34,7 @@ def display_round(round_name):
 def display_score(players):
     players.sort(key=lambda x: x.elo)
     players.sort(key=lambda x: x.score, reverse=True)
-    print(f' \n------  Score Player  ------')
+    print(' \n------  Score Player  ------')
     for player in players:
         print(f'| {player.first_name}  \t{player.id}\t{player.score}  |')
 
@@ -49,4 +49,3 @@ def display_continue_tournament():
     print(' |> Souhaitez vous continuer?')
     print(' 1 - Oui')
     print(' Q - Retour')
-

@@ -164,8 +164,3 @@ def main_menu():
             statistics_menu()
         if input.upper() == 'Q':
             break
-
-
-
-
-

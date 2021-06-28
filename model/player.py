@@ -30,10 +30,12 @@ class Player:
 
     def __str__(self):
         out_test = f"{self.first_name}-{self.last_name}"
+        """
         out = f"first name: {self.first_name} | last name: {self.last_name}, \n" \
               f"date of birth: {self.date_birth} | sexe: {self.sexe} \n " \
               f"score: {self.score} | elo: {self.elo} | id: {self.id} \n" \
               f"| opponents: {self.opponents}"
+        """
         return out_test
 
     def add_opponent(self, opponent_id):

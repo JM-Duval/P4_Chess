@@ -140,6 +140,3 @@ def display_continue():
     print(' |> Souhaitez vous continuer?')
     print(' 1 - Oui')
     print(' Q - Retour')
-
-
-

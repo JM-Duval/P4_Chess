@@ -20,4 +20,4 @@ def display_players(players):
     x = 1
     for player in players:
         print(f'{x} - {player}  -  elo : {player.elo}')
-        x+=1
+        x += 1

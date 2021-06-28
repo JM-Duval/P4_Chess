@@ -4,7 +4,7 @@
 It is a first program with MVC structuring."""
 
 
-def enter(description = '>'):
+def enter(description='>'):
     user_input = input(f"{description} : ")
     return user_input
 

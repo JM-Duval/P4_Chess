@@ -18,7 +18,7 @@ class DataTournament:
         self.tournament_name = tournament_name
         self.name_table = 'tournament'
         self.name_file = 'tournaments.json'
-        origin_path = (sys.path[(len(sys.path)) -2][ : -4])
+        origin_path = (sys.path[(len(sys.path))-2][:-4])
         path_data_tournament = os.path.join(origin_path, 'data/tournaments')
         db = TinyDB(os.path.join(path_data_tournament, self.name_file))
         self.tournament_table = db.table(self.name_table)
@@ -183,9 +183,8 @@ class DataTournament:
 
     def get_infos_tour(self):
         tour = self.load_tournament()
-        return tour.tournament_name, tour.location, tour.start_time, \
-               tour.end_time, tour.tour_number, tour.status, \
-               self.get_sorted_players_score()
+        return tour.tournament_name, tour.location, tour.start_time, tour.end_time, \
+               tour.tour_number, tour.status, self.get_sorted_players_score()
 
     def get_sorted_players_alpha(self):
         return sorted(self.load_tournament().players, key=lambda x: x.last_name)

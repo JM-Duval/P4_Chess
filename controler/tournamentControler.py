@@ -5,20 +5,19 @@ It is a first program with MVC structuring."""
 
 from math import floor
 import datetime
-import sys
-sys.path[:0] = ['../']
 from model.tournament import Tournament
 from model.round import Round
 from model.dataBaseTournamentModel import DataTournament
 from controler.inputUserControler import UserInput
-from view.menuView import DisplayMenu, DisplayList, DisplayMessage, \
-    display_continue
 from view.tournamentView import display_start_time, display_end_time, \
-    display_game_sheet, display_opponents, display_round, display_score, \
+    display_game_sheet, display_round, display_score, \
     display_winner, display_continue_tournament
 from view.inputUserView import display_back
+import sys
+sys.path[:0] = ['../']
 
-def run_tournament (tournament_name=None, players=None):
+
+def run_tournament(tournament_name=None, players=None):
     run = True
     while run:
         if tournament_name is None:
@@ -94,7 +93,7 @@ class TournamentControler:
             DataTournament(self.tournament_name).save_tournament(self.tournament)
             print('*********** Nouvelle partie enregistree  ***********')
 
-    def run_round (self):
+    def run_round(self):
         # update tour number
         self.tournament.tour_number += 1
         if self.tournament.tour_number <= 4:
@@ -116,7 +115,6 @@ class TournamentControler:
             for match in roundx.matchs:
                 match.player1.add_opponent(match.player2.id)
                 match.player2.add_opponent(match.player1.id)
-
 
             display_round(round_name)
             display_game_sheet(roundx.matchs)
