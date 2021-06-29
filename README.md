@@ -107,6 +107,32 @@ En executant la commande: pip freeze, vous devez voir apparaitre cette liste:
 
 Losque vous allez lancer le programme depuis le terminal, vous allez voir apparaitre le menu principale. Il vous suffit ensuite de suivre les indications pour naviguer des les menus et sous menus. 
 
+## Flake_8
+
+### Presentation
+
+flake8 est un outil qui permet de valider un code Python suivant les conventions de codage PEP 8 (Style guide for Python Code) et de pyflakes (détection d'erreurs). Il génère automatiquement des rapports précisant les erreurs et type d'erreur des programmes présents dans le même dossier que celui-ci. 
+
+### Lancement de Flake_8
+
+A partir de votre dossier de téléchargement (à côté de main.py), vous devez avoir le programme ci dessous:
+
+```.flake_8```
+
+Depuis votre terminal, lancer ce dernier en tapant :  
+
+.flake_8
+
+Une fois l'exécution du programme terminé, dirigez-vous dans le dossier:
+
+```flake-report```
+
+Puis ouvrir le fichier:
+
+```index.html```
+
+Dans ce menu HTML, vous trouverez un rapport indiquant l'ensemble des erreurs (si il y a) de tous les dossiers concernés. Chaque erreur est associé à un code (par exemple E722). Vous trouverez des informations détaillés des codes sur [flake8rules](https://www.flake8rules.com/).  
+
 ## Fabriqué avec
 [PyCharm Community Edition 2020.2.3 x64](https://pycharm-community-edition.fr.softonic.com/) - Editeur de textes
 
