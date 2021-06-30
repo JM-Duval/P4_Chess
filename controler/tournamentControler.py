@@ -3,18 +3,15 @@
 """This file is a exercice about a program for help the chess tournament organization.
 It is a first program with MVC structuring."""
 
-from math import floor
 import datetime
+from math import floor
 from model.tournament import Tournament
 from model.round import Round
 from model.dataBaseTournamentModel import DataTournament
 from controler.inputUserControler import UserInput
 from view.tournamentView import display_start_time, display_end_time, \
     display_game_sheet, display_round, display_score, \
-    display_winner, display_continue_tournament
-from view.inputUserView import display_back
-import sys
-sys.path[:0] = ['../']
+    display_winner, display_continue_tournament, display_update_player_now
 
 
 def run_tournament(tournament_name=None, players=None):
@@ -40,9 +37,11 @@ def run_tournament(tournament_name=None, players=None):
         tour.run_round()
 
         if tournament.status == 'closed':
-            display_back()
-            input('')
-            break
+            if display_update_player_now() == '1':
+                return tournament.status
+                break
+            else:
+                break
         else:
             display_continue_tournament()
             user_input = UserInput().interval(1)
@@ -131,12 +130,9 @@ class TournamentControler:
             if self.tournament.tour_number == 4:
                 display_winner(self.tournament_name, self.tournament.players[0])
                 self.close_tournament()
-                print('Fichier CLOSED')
-
         else:
             display_winner(self.tournament_name, self.tournament.players[0])
             self.close_tournament()
-            print('Fichier CLOSED')
 
     def sorted_players(self, tour_number):
         if tour_number == 1:
@@ -164,7 +160,7 @@ class TournamentControler:
                         opponent_list_checked.append(players_sorted[i])
                         players_sorted.pop(x), players_sorted.pop(i - 1)
                         opponent_in_list = False
-                except:  # situation ou un joueur à déja joué vs tout le monde.
+                except IndexError:  # situation ou un joueur à déja joué vs tout le monde.
                     # il rejoue vs le joueur n+1
                     opponent_list_checked.append(players_sorted[x])
                     opponent_list_checked.append(players_sorted[x+1])

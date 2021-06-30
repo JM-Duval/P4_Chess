@@ -5,10 +5,10 @@ Web_site_link = https://www.docstring.fr/blog/tinydb-une-base-de-donnees-adaptee
 
 from model.dataBasePlayersModel import DataBasePlayers
 from view.dataBasePlayersView import display_player_exist, display_player_saved, \
-    display_player_delete, display_players
+    display_player_delete, display_players, display_update_player, display_error_message
 from model.player import Player
-import sys
-sys.path[:0] = ['../']
+# import sys
+# sys.path[:0] = ['../']
 
 
 player1 = ('annie', 'cordy', '16/06/1928', 'women', 8)
@@ -45,16 +45,21 @@ def enter_new_player(infos_player):
         DataBasePlayers().insert(new_player)
         if DataBasePlayers().search(new_player) is True:
             display_player_saved(new_player)
+        else:
+            display_error_message()
 
 
 def del_player(player):
     DataBasePlayers().remove(player)
     if DataBasePlayers().search(player) is True:
-        print('probleme')
+        display_error_message()
     else:
         display_player_delete(player)
         display_players(DataBasePlayers().load())
 
 
-def edit_player():
-    print('Fonction non disponible pour le moment')
+def edit_elo_player(player, new_elo):
+    if DataBasePlayers().update_elo(player, new_elo) == new_elo:
+        display_update_player(player, new_elo)
+    else:
+        display_error_message()

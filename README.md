@@ -121,7 +121,7 @@ A partir de votre dossier de téléchargement (à côté de main.py), vous devez avoi
 
 Depuis votre terminal, lancer ce dernier en tapant :  
 
-.flake_8
+flake8
 
 Une fois l'exécution du programme terminé, dirigez-vous dans le dossier:
 

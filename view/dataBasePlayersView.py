@@ -21,3 +21,11 @@ def display_players(players):
     for player in players:
         print(f'{x} - {player}  -  elo : {player.elo}')
         x += 1
+
+
+def display_update_player(player, elo):
+    print(f'Nouveau ELO de {player} : {elo}')
+
+
+def display_error_message():
+    print(' Error programme')

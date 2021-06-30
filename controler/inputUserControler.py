@@ -11,8 +11,8 @@ from view.inputUserView import enter, display_error_word_message, \
     display_error_sexe_message, display_time_control_selection, \
     display_question_winner, display_error_message, display_winner, \
     display_winners, display_interval
-import sys
-sys.path[:0] = ['../']
+# import sys
+# sys.path[:0] = ['../']
 
 
 class UserInput:
@@ -21,7 +21,7 @@ class UserInput:
 
     def infos_tournament(self):
         tournament_name = self.word('tournament_name')
-        location = self.check_word('location')
+        location = self.word('location')
         tour_number = 0
         time_control = self.time_control()
         return tournament_name, location, tour_number, time_control

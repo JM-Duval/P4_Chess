@@ -3,9 +3,6 @@
 """This file is a exercice about a program for help the chess tournament organization.
 It is a first program with MVC structuring."""
 
-import sys
-sys.path[:0] = ['../']
-
 
 def display_start_time(start_time):
     print(f'Lancement du tournoi: {start_time}')
@@ -49,3 +46,11 @@ def display_continue_tournament():
     print(' |> Souhaitez vous continuer?')
     print(' 1 - Oui')
     print(' Q - Retour')
+
+
+def display_update_player_now():
+    print(' Souhaitez-vous mettre a jour le classement maintenant? ')
+    print(' 1 - Oui')
+    print(' Q - Retour')
+    user_input = input(' : ')
+    return user_input

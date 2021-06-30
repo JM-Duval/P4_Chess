@@ -5,13 +5,12 @@ It is a first program with MVC structuring."""
 
 from controler.tournamentControler import run_tournament
 from controler.inputUserControler import UserInput
-from controler.dataBasePlayersControler import enter_new_player, del_player, edit_player
+from controler.dataBasePlayersControler import enter_new_player, del_player, edit_elo_player
 from model.dataBaseTournamentModel import DataTournament, AllTournaments
 from model.dataBasePlayersModel import DataBasePlayers
 from view.menuView import DisplayMenu, DisplayMessage, DisplayList
 import os
-import sys
-sys.path[:0] = ['../']
+
 
 user_input = UserInput().interval
 
@@ -68,6 +67,17 @@ def statistics_menu():
             run = False
 
 
+def update_elo_player():
+    players = DataBasePlayers().load()
+    DisplayList().players(players)
+    input = user_input(len(players))
+    player_selected = players[int(input) - 1]
+    print(player_selected)
+    DisplayMessage().new_elo(player_selected)
+    input_new_elo = UserInput().number('elo')
+    edit_elo_player(player_selected, int(input_new_elo))
+
+
 def statistics_players_menu():
     run = True
     while run:
@@ -80,12 +90,18 @@ def statistics_players_menu():
             infos_player = UserInput().infos_player()
             enter_new_player(infos_player)
         if input == '3':
-            edit_player()
+            try:
+                update_elo_player()
+            except ValueError:
+                break
         if input == '4':
             players = DataBasePlayers().load()
             DisplayList().players(players)
-            input = user_input(len(players))
-            del_player(players[int(input)-1])
+            try:
+                input = user_input(len(players))
+                del_player(players[int(input)-1])
+            except ValueError:
+                break
         if input.upper() == 'Q':
             run = False
 
@@ -101,8 +117,14 @@ class LaunchTournamentMenu:
             if players_for_tour is False:
                 break
             else:
-                run_tournament(None, players_for_tour)
-                break
+                if run_tournament(None, players_for_tour) == "closed":
+                    try:
+                        update_elo_player()
+                        break
+                    except ValueError:
+                        break
+                else:
+                    break
 
     def select_players(self):
         selection = []
@@ -132,8 +154,14 @@ class LaunchTournamentMenu:
             if tournament is False:
                 break
             else:
-                run_tournament(tournament, None)
-                break
+                if run_tournament(tournament, None) == "closed":
+                    try:
+                        update_elo_player()
+                        break
+                    except ValueError:
+                        break
+                else:
+                    break
 
     def select_tournament(self):
         tournaments_open = AllTournaments().status_open()

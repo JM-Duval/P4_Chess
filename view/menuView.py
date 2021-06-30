@@ -4,8 +4,6 @@
 It is a first program with MVC structuring."""
 
 import os
-import sys
-sys.path[:0] = ['../']
 
 
 class DisplayMenu:
@@ -50,8 +48,8 @@ class DisplayMenu:
         print(" * Base de donnees joueurs *")
         print()
         print(" 1 - Afficher les joueurs")
-        print(" 2 - Enregistrer un nouveau joueur ")
-        print(" 3 - Modifier les donnees d un joueur ")
+        print(" 2 - Enregistrer un nouveau joueur")
+        print(" 3 - Mettre à jour le classement")
         print(" 4 - Supprimer un joueur")
         print()
         os.system('clear')
@@ -134,6 +132,9 @@ class DisplayMessage:
 
     def player_error(self, player):
         print(f' {player} est deja inscrit.')
+
+    def new_elo(self, player):
+        print(f' Nouveau ELO de {player}: ')
 
 
 def display_continue():

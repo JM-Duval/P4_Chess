@@ -5,8 +5,6 @@ It is a first program with MVC structuring."""
 
 from model.match import Match
 import time
-import sys
-sys.path[:0] = ['../']
 
 
 class Round:
