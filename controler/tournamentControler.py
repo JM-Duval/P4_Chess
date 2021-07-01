@@ -15,6 +15,9 @@ from view.tournamentView import display_start_time, display_end_time, \
 
 
 def run_tournament(tournament_name=None, players=None):
+    """Lancement tournoi.
+    S'il n'y a pas de nom de tour, lancement d'un nouveau tournoi.
+    Si non, chargement des paramètres du tournoi nommé."""
     run = True
     while run:
         if tournament_name is None:
@@ -87,10 +90,8 @@ class TournamentControler:
                 self.tournament_name, self.start_time)
             DataTournament(self.tournament_name).update_end_time(
                 self.tournament_name, self.end_time)
-            print('*********** Partie Sauvegardee ***********')
         else:
             DataTournament(self.tournament_name).save_tournament(self.tournament)
-            print('*********** Nouvelle partie enregistree  ***********')
 
     def run_round(self):
         # update tour number
@@ -117,6 +118,7 @@ class TournamentControler:
 
             display_round(round_name)
             display_game_sheet(roundx.matchs)
+
             # update score player
             for i in range(self.nb_match):
                 self._handle_score(roundx.matchs[i].player1,
@@ -160,7 +162,8 @@ class TournamentControler:
                         opponent_list_checked.append(players_sorted[i])
                         players_sorted.pop(x), players_sorted.pop(i - 1)
                         opponent_in_list = False
-                except IndexError:  # situation ou un joueur à déja joué vs tout le monde.
+                except IndexError:
+                    # situation ou un joueur à déja joué vs tout le monde.
                     # il rejoue vs le joueur n+1
                     opponent_list_checked.append(players_sorted[x])
                     opponent_list_checked.append(players_sorted[x+1])

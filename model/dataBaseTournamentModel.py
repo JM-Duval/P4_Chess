@@ -8,9 +8,6 @@ from model.tournament import Tournament
 from model.round import Round
 from model.player import Player
 import os
-import sys
-
-sys.path[:0] = ["../"]
 
 
 class DataTournament:
@@ -18,8 +15,7 @@ class DataTournament:
         self.tournament_name = tournament_name
         self.name_table = "tournament"
         self.name_file = "tournaments.json"
-        origin_path = sys.path[(len(sys.path)) - 2][:-4]
-        path_data_tournament = os.path.join(origin_path, "data/tournaments")
+        path_data_tournament = "data/tournaments"
         db = TinyDB(os.path.join(path_data_tournament, self.name_file))
         self.tournament_table = db.table(self.name_table)
 
@@ -242,8 +238,7 @@ class AllTournaments:
     def __init__(self):
         self.name_table = "tournament"
         self.name_file = "tournaments.json"
-        origin_path = sys.path[(len(sys.path)) - 2][:-4]
-        path_data_tournament = os.path.join(origin_path, "data/tournaments")
+        path_data_tournament = "data/tournaments"
         db = TinyDB(os.path.join(path_data_tournament, self.name_file))
         self.tournament_table = db.table(self.name_table)
 

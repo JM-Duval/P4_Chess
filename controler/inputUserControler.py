@@ -11,8 +11,6 @@ from view.inputUserView import enter, display_error_word_message, \
     display_error_sexe_message, display_time_control_selection, \
     display_question_winner, display_error_message, display_winner, \
     display_winners, display_interval
-# import sys
-# sys.path[:0] = ['../']
 
 
 class UserInput:

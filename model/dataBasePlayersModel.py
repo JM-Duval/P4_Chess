@@ -6,16 +6,13 @@ Web_site_link = https://www.docstring.fr/blog/tinydb-une-base-de-donnees-adaptee
 from model.player import Player
 from tinydb import TinyDB, Query
 import os
-import sys
-sys.path[:0] = ["../"]
 
 
 class DataBasePlayers:
     def __init__(self):
         self.name_table = "players"
         self.name_file = "players_chess.json"
-        origin_path = sys.path[(len(sys.path)) - 2][:-4]
-        path_data_players = os.path.join(origin_path, "data/list_players")
+        path_data_players = "data/list_players"
         db = TinyDB(os.path.join(path_data_players, self.name_file))
         self.players_table = db.table(self.name_table)
 
